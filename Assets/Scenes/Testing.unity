@@ -378,6 +378,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
+  cameraMovement: {fileID: 1777302607}
   rb: {fileID: 243217494}
 --- !u!1 &254707427
 GameObject:
@@ -1346,7 +1347,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1777302602}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.9910241, z: -0.13368352, w: 0}
+  m_LocalRotation: {x: 0, y: 0.9910241, z: -0.13368352, w: 0}
   m_LocalPosition: {x: 5.5, y: 1.232, z: 18.57983}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1410,6 +1411,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamaraMovement
   player: {fileID: 243217492}
+  CameraPosition: {fileID: 1777302605}
 --- !u!1 &1971286956
 GameObject:
   m_ObjectHideFlags: 0

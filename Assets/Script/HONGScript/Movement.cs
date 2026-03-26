@@ -64,11 +64,13 @@ public class Movement : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Q))
             {
                 StartCoroutine(TurnLeft());
+                cameraMovement.RotatingLeft();
                 CAN_Turn = false;
             }
             else if (Input.GetKeyDown(KeyCode.E))
             {
                 StartCoroutine(TurnRight());
+                cameraMovement.RotatingRight();
                 CAN_Turn = false;
             }
         }
@@ -86,7 +88,6 @@ public class Movement : MonoBehaviour
 
     IEnumerator TurnLeft()
     {
-        
         Quaternion RotateLeft = Quaternion.Euler(0, -90, 0);
         transform.rotation = transform.rotation * RotateLeft;
         //Orientation.rotation
