@@ -14,10 +14,8 @@ public class Movement : MonoBehaviour
  
     float horizontalInput;
     public Rigidbody rb;
-    float yRotation;
-    float RotationSpeed = 200f;
-    float savedRotation;
-
+    //float yRotation;
+    //float RotationSpeed = 200f;
 
     bool CAN_Turn;
     bool alive;
@@ -41,8 +39,6 @@ public class Movement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        savedRotation = transform.rotation.y;
-
         if (!alive) return;
 
         horizontalInput = Input.GetAxis("Horizontal");
@@ -80,8 +76,8 @@ public class Movement : MonoBehaviour
 
     IEnumerator TurnRight()
     {
-        Quaternion RotateRight = Quaternion.Euler(0, (savedRotation - 90), 0);
-        transform.rotation = Quaternion.Lerp(transform.rotation, RotateRight, Time.deltaTime * RotationSpeed);
+        Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
+        transform.rotation = transform.rotation * RotateRight;
         //Orientation.rotation
         yield return new WaitForSeconds(1.5f);
         CAN_Turn = true;
@@ -89,9 +85,9 @@ public class Movement : MonoBehaviour
 
     IEnumerator TurnLeft()
     {
-        Quaternion RotateRight = Quaternion.Euler(0, (savedRotation + 90), 0);
-        transform.rotation = RotateRight;
-
+        
+        Quaternion RotateLeft = Quaternion.Euler(0, -90, 0);
+        transform.rotation = transform.rotation * RotateLeft;
         //Orientation.rotation
         yield return new WaitForSeconds(1.5f);
         CAN_Turn = true;
