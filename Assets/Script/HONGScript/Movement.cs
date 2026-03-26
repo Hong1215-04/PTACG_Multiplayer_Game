@@ -11,6 +11,7 @@ public class Movement : MonoBehaviour
     [SerializeField] float HoriSpeed = 5;
     [SerializeField] float JumpForce = 100f;
     [SerializeField] LayerMask groundMask;
+    [SerializeField] CamaraMovement cameraMovement;
  
     float horizontalInput;
     public Rigidbody rb;

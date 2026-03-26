@@ -23,6 +23,15 @@ public class DeadCollied : MonoBehaviour
             Invoke("StopGame", 2);
         }
     }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
+        {
+            movement.Die();
+            Invoke("StopGame", 2);
+        }
+    }
     void StopGame() 
     {
         UnityEditor.EditorApplication.isPlaying = false;
