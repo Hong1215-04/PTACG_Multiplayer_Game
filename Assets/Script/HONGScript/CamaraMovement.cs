@@ -1,26 +1,44 @@
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class CamaraMovement : MonoBehaviour
 {
     [SerializeField] Transform player;
     [SerializeField] Transform CameraPosition; 
     Vector3 Offset;
-    Vector3 CamerBasedRotation;
+    //Vector3 OffsetRight;
+    //Vector3 OffsetLeft;
+    //Vector3 OffsetBack;
+
+    //Vector3 CamerBasedRotation;
+    private float originalX;
+    private float originalZ;
 
     bool Left = false;
     bool Right = false;
     bool Front = true;
     bool Back = false;
 
+    private float HeightOffSet;
+    private float ForwardOffSet;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
+        //Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
+        Vector3 CameraBasedRotation = transform.eulerAngles;
+        originalX = CameraBasedRotation.x;
+        originalZ = CameraBasedRotation.z;
+
         Offset = transform.position - player.position;
+        HeightOffSet = Offset.y;
+        ForwardOffSet = Offset.z;
+
         Left = false;
         Right = false;
         Front = true;
         Back = false;
+
     }
 
     // Update is called once per frame
@@ -28,24 +46,36 @@ public class CamaraMovement : MonoBehaviour
     {
         if (Front)
         {
-            Vector3 targetPos = player.position + Offset;
-            targetPos.x = CameraPosition.position.x;
+            transform.eulerAngles = new Vector3(originalX, 180, originalZ);
             //targetPos.x = 5.5f;
-            transform.position = targetPos;
+            Vector3 targetPos = new Vector3(CameraPosition.position.x, player.position.y, player.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
         }
         else if (Back)
         {
-            Vector3 targetPos = new Vector3(player.position.x,(player.position.y + Offset.y),(player.position.z - Offset.z));
-            targetPos.x = CameraPosition.position.x;
+            //Vector3 targetPos = player.position;
+            //targetPos.y = player.position.y + OffsetBack.y;
+            //targetPos.x = CameraPosition.position.x;
+            //targetPos.z = player.position.z + OffsetBack.z;
+            transform.eulerAngles = new Vector3(originalX, 0, originalZ);
             //targetPos.x = 5.5f;
-            transform.position = targetPos;
+            Vector3 targetPos = new Vector3 (CameraPosition.position.x, player.position.y, player.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+
         }
-        if (Left || Right)
+        else if (Left)
         {
-            Vector3 targetPos = player.position + Offset;
-            targetPos.y = CameraPosition.position.y;
+            transform.eulerAngles = new Vector3(originalX, 90, originalZ);
             //targetPos.x = 5.5f;
-            transform.position = targetPos;
+            Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+        }
+        else if (Right)
+        {
+            transform.eulerAngles = new Vector3(originalX, 270, originalZ);
+            //targetPos.x = 5.5f;
+            Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
         }
     }
 
@@ -79,10 +109,9 @@ public class CamaraMovement : MonoBehaviour
 
     public void RotatingRight()
     {
-        Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
-        transform.rotation = transform.rotation * RotateRight;
-        Quaternion StillX = Quaternion.Euler(CamerBasedRotation.x, 0, 0);
-
+        //Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
+        //transform.rotation = transform.rotation * RotateRight;
+        
         if (Front)
         {
             Right = true;
@@ -111,6 +140,6 @@ public class CamaraMovement : MonoBehaviour
 
     void RecordCamPosition()
     {
-        CameraPosition.position = transform.position;
+        CameraPosition.position = player.position;
     }
 }
