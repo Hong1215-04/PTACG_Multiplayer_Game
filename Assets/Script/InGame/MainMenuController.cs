@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using Photon.Pun;
+using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -12,12 +13,16 @@ public class MainMenuController : MonoBehaviour
     public GameObject settingsPanel;
     public GameObject passwordPanel;
     public GameObject teamPanel;
+    public GameObject startGameButton;  // 新增：开始游戏按钮
+    public TMP_Text playerCountText;    // 新增：显示玩家数量
 
     public TMP_InputField passwordInputField;
     public TMP_Text errorText;
 
     public LobbyManager lobbyManager;
     private PhotonManager photonManager;
+    
+    public string gameSceneName = "Testing";  // 可在Inspector中修改
 
     private bool isJoinMode = false;
 
@@ -317,5 +322,93 @@ public class MainMenuController : MonoBehaviour
 #else
         Application.Quit();
 #endif
+    }
+
+    // 新增：显示开始游戏按钮（当两个玩家都进入时）
+    public void ShowStartButton()
+    {
+        Debug.Log("ShowStartButton called");
+        
+        if (startGameButton != null)
+        {
+            startGameButton.SetActive(true);
+            Debug.Log("Start Game Button shown");
+        }
+        else
+        {
+            Debug.LogWarning("startGameButton not assigned in Inspector!");
+        }
+
+        UpdatePlayerCountDisplay();
+    }
+
+    // 新增：更新玩家计数显示
+    private void UpdatePlayerCountDisplay()
+    {
+        if (playerCountText != null && PhotonNetwork.InRoom)
+        {
+            playerCountText.text = $"Players: {PhotonNetwork.CurrentRoom.PlayerCount}/2";
+        }
+    }
+
+    // 新增：开始游戏按钮点击事件
+    public void OnClickStartGame()
+    {
+        Debug.Log("OnClickStartGame called");
+        
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            Debug.LogWarning("Only the master client can start the game!");
+            return;
+        }
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount < 1)
+        {
+            Debug.LogWarning("Not enough players to start the game!");
+            return;
+        }
+
+        // 调用 LobbyManager 的开始游戏方法
+        if (lobbyManager != null)
+        {
+            lobbyManager.StartGame();
+        }
+        else
+        {
+            Debug.LogError("LobbyManager not assigned!");
+        }
+    }
+
+    // 新增：进入游戏（所有玩家都会调用这个方法）
+    public void EnterGame()
+    {
+        Debug.Log("EnterGame called - Loading scene: " + gameSceneName);
+        
+        if (string.IsNullOrEmpty(gameSceneName))
+        {
+            Debug.LogError("gameSceneName is empty! Please set it in the Inspector.");
+            return;
+        }
+
+        if (teamPanel != null)
+        {
+            teamPanel.SetActive(false);
+        }
+        
+        if (startGameButton != null)
+        {
+            startGameButton.SetActive(false);
+        }
+
+        Debug.Log("Now loading scene: " + gameSceneName);
+        try
+        {
+            SceneManager.LoadScene(gameSceneName);
+            Debug.Log("Scene load initiated successfully!");
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogError("Failed to load scene: " + ex.Message);
+        }
     }
 }
