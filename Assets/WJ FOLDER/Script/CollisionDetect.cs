@@ -3,8 +3,10 @@ using static UnityEngine.AdaptivePerformance.Provider.AdaptivePerformanceSubsyst
 
 public class CollisionDetect : MonoBehaviour
 {
-    [SerializeField] GameObject thePlayer; 
-    void OnTriggerEnter (Collider other)
+    [SerializeField] GameObject thePlayer;
+    void OnTriggerEnter(Collider other)
     {
-        thePlayer.GetComponent(PlayerMovement).enabled = false;
+        //thePlayer.GetComponent(PlayerMovement).enabled = false;
+
+    }
 }
