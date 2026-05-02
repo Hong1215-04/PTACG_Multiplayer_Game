@@ -1,0 +1,145 @@
+using UnityEngine;
+using static UnityEngine.Rendering.DebugUI.Table;
+
+public class CamaraMovement : MonoBehaviour
+{
+    [SerializeField] Transform player;
+    [SerializeField] Transform CameraPosition; 
+    Vector3 Offset;
+    //Vector3 OffsetRight;
+    //Vector3 OffsetLeft;
+    //Vector3 OffsetBack;
+
+    //Vector3 CamerBasedRotation;
+    private float originalX;
+    private float originalZ;
+
+    bool Left = false;
+    bool Right = false;
+    bool Front = true;
+    bool Back = false;
+
+    private float HeightOffSet;
+    private float ForwardOffSet;
+
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    void Start()
+    {
+        //Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
+        Vector3 CameraBasedRotation = transform.eulerAngles;
+        originalX = CameraBasedRotation.x;
+        originalZ = CameraBasedRotation.z;
+
+        Offset = transform.position - player.position;
+        HeightOffSet = Offset.y;
+        ForwardOffSet = Offset.z;
+
+        Left = false;
+        Right = false;
+        Front = true;
+        Back = false;
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Front)
+        {
+            transform.eulerAngles = new Vector3(originalX, 180, originalZ);
+            //targetPos.x = 5.5f;
+            Vector3 targetPos = new Vector3(CameraPosition.position.x, player.position.y, player.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+        }
+        else if (Back)
+        {
+            //Vector3 targetPos = player.position;
+            //targetPos.y = player.position.y + OffsetBack.y;
+            //targetPos.x = CameraPosition.position.x;
+            //targetPos.z = player.position.z + OffsetBack.z;
+            transform.eulerAngles = new Vector3(originalX, 0, originalZ);
+            //targetPos.x = 5.5f;
+            Vector3 targetPos = new Vector3 (CameraPosition.position.x, player.position.y, player.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+
+        }
+        else if (Left)
+        {
+            transform.eulerAngles = new Vector3(originalX, 90, originalZ);
+            //targetPos.x = 5.5f;
+            Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+        }
+        else if (Right)
+        {
+            transform.eulerAngles = new Vector3(originalX, 270, originalZ);
+            //targetPos.x = 5.5f;
+            Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
+            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+        }
+    }
+
+    public void RotatingLeft()
+    {
+        if (Front)
+        {
+            Left = true;
+            Front = false;
+            RecordCamPosition();
+        }
+        else if (Left)
+        {
+            Back = true; 
+            Left = false;
+            RecordCamPosition();
+        }
+        else if (Back)
+        {
+            Right = true; 
+            Back = false;
+            RecordCamPosition();
+        }
+        else if (Right)
+        {
+            Front = true;
+            Right = false;
+            RecordCamPosition();
+        }
+    }
+
+    public void RotatingRight()
+    {
+        //Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
+        //transform.rotation = transform.rotation * RotateRight;
+        
+        if (Front)
+        {
+            Right = true;
+            Front = false;
+            RecordCamPosition();
+        }
+        else if (Right)
+        {
+            Back = true;
+            Right = false;
+            RecordCamPosition();
+        }
+        else if (Back)
+        {
+            Left = true;
+            Back = false;
+            RecordCamPosition();
+        }
+        else if (Left)
+        {
+            Front = true;
+            Left = false;
+            RecordCamPosition();
+        }
+    }
+
+    void RecordCamPosition()
+    {
+        CameraPosition.position = player.position;
+    }
+}
