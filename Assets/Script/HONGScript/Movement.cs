@@ -45,12 +45,14 @@ public class Movement : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
 
         float height = GetComponent<Collider>().bounds.size.y;
-        bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.1f, groundMask);
+        bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.6f, groundMask);
 
         if (isGrounded)
         {
+            Debug.Log("Ground");
             if (Input.GetKeyDown(KeyCode.W))
             {
+                Debug.Log("JUMPress");
                 Jump();
             }
         }
