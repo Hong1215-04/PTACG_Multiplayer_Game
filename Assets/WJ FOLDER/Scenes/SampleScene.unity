@@ -468,7 +468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de6798d3f1656f4e98dde45bf5d8aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamaraMovement
-  player: {fileID: 0}
+  player: {fileID: 1610908148}
   CameraPosition: {fileID: 17863542}
 --- !u!114 &17863539
 MonoBehaviour:
@@ -582,7 +582,7 @@ Transform:
   m_GameObject: {fileID: 17863537}
   serializedVersion: 2
   m_LocalRotation: {x: 0.094528526, y: 0.7007598, z: -0.094528526, w: 0.7007598}
-  m_LocalPosition: {x: -22.24, y: 3.082, z: -0.137}
+  m_LocalPosition: {x: -24.817, y: 3.129, z: -0.137}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12148,7 +12148,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
-  cameraMovement: {fileID: 0}
+  cameraMovement: {fileID: 17863538}
   rb: {fileID: 1610908149}
 --- !u!136 &1610908151
 CapsuleCollider:
@@ -14263,6 +14263,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Road
       objectReference: {fileID: 0}
+    - target: {fileID: 4762600501720790731, guid: 301e6248db96cd54695b8f22f0d11817, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6040382576492172339, guid: 301e6248db96cd54695b8f22f0d11817, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -15905,6 +15909,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Road
       objectReference: {fileID: 0}
+    - target: {fileID: 2219427519827818332, guid: 301e6248db96cd54695b8f22f0d11817, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 4762600501720790731, guid: 301e6248db96cd54695b8f22f0d11817, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6040382576492172339, guid: 301e6248db96cd54695b8f22f0d11817, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -15917,6 +15929,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 62c01cd363116e4418505d6d72764b0d, type: 2}
+    - target: {fileID: 8612815767814652989, guid: 301e6248db96cd54695b8f22f0d11817, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
