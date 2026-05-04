@@ -4,6 +4,7 @@ public class DeadCollied : MonoBehaviour
 {
     [SerializeField] Movement movement;
     public string EachPlayerDeadlayer;
+    private bool gameEnded;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,13 +21,11 @@ public class DeadCollied : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
         {
-            movement.Die();
-            Invoke("LoseGame", 2);
+            EndGame();
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            movement.Die();
-            Invoke("WinGame", 2);
+            EndGame();
         }
     }
 
@@ -34,13 +33,11 @@ public class DeadCollied : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
         {
-            movement.Die();
-            Invoke("LoseGame", 2);
+            EndGame();
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            movement.Die();
-            Invoke("WinGame", 2);
+            EndGame();
         }
     }
 
@@ -48,8 +45,7 @@ public class DeadCollied : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer(EachPlayerDeadlayer))
         {
-            movement.Die();
-            Invoke("LoseGame", 2);
+            EndGame();
         }
     }
 
@@ -57,18 +53,27 @@ public class DeadCollied : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer(EachPlayerDeadlayer))
         {
-            movement.Die();
-            Invoke("LoseGame", 2);
+            EndGame();
         }
     }
 
-    void LoseGame() 
+    void EndGame()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
-    }
+        if (gameEnded)
+        {
+            return;
+        }
 
-    void WinGame()
-    {
-        UnityEditor.EditorApplication.isPlaying = false;
+        gameEnded = true;
+        movement.Die();
+
+        GameOverVoteManager voteManager = GameOverVoteManager.FindInstance();
+        if (voteManager == null)
+        {
+            Debug.LogError("[DeadCollied] GameOverVoteManager not found. Add it to your game scene Canvas and assign the death UI references.");
+            return;
+        }
+
+        voteManager.ShowDeathVote();
     }
 }

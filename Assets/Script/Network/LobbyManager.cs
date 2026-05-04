@@ -235,8 +235,16 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
 
         // 直接调用，不用 RPC（因为只有房主能调用）
-        Debug.Log("Starting game directly...");
-        RPC_StartGame();
+        string sceneName = mainMenuController != null ? mainMenuController.gameSceneName : "Testing";
+        if (string.IsNullOrEmpty(sceneName))
+        {
+            Debug.LogError("Game scene name is empty.");
+            return;
+        }
+
+        Debug.Log("Starting game...");
+        PhotonNetwork.AutomaticallySyncScene = true;
+        PhotonNetwork.LoadLevel(sceneName);
     }
 
     [PunRPC]
