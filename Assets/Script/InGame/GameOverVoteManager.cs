@@ -37,10 +37,19 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
     [Header("Settings UI")]
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private Button closeSettingsButton;
+    [SerializeField] private Slider volumeSlider;
 
     private readonly Dictionary<int, VoteChoice> votes = new Dictionary<int, VoteChoice>();
     private bool voteStarted;
     private bool decisionApplied;
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && !voteStarted)
+        {
+            ToggleSettingsPanel();
+        }
+    }
 
     private void Awake()
     {
@@ -51,7 +60,9 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         Instance = this;
+        AutoAssignTextReferences();
         HookButtons();
+        SetupVolumeSlider();
         HidePanels();
     }
 
@@ -124,6 +135,30 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    private void ToggleSettingsPanel()
+    {
+        if (settingsPanel == null)
+        {
+            Debug.LogWarning("[GameOverVoteManager] Settings Panel is not assigned. Esc settings cannot open.");
+            return;
+        }
+
+        bool shouldOpen = !settingsPanel.activeSelf;
+        settingsPanel.SetActive(shouldOpen);
+        if (votePanel != null && !voteStarted)
+        {
+            votePanel.SetActive(false);
+        }
+    }
+
+    public void CloseEscapeMenu()
+    {
+        if (settingsPanel != null && !voteStarted)
+        {
+            settingsPanel.SetActive(false);
+        }
+    }
+
     private void SubmitLocalVote(VoteChoice choice)
     {
         if (!voteStarted || decisionApplied)
@@ -155,6 +190,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         voteStarted = true;
         decisionApplied = false;
         votes.Clear();
+        AutoAssignTextReferences();
 
         votePanel.SetActive(true);
         if (settingsPanel != null)
@@ -168,6 +204,9 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
 
         SetStatus(reason + "\nVote to restart or return to lobby.");
+        SetButtonVisible(restartButton, true);
+        SetButtonVisible(exitLobbyButton, true);
+        SetButtonVisible(settingsButton, true);
         SetButtonsInteractable(true);
     }
 
@@ -227,7 +266,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (decision == VoteChoice.Exit)
         {
             SetStatus("Returning to lobby...");
-            StartCoroutine(LeaveRoomAndLoadLobby());
+            LoadLobbyScene();
             return;
         }
 
@@ -298,15 +337,17 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         PhotonNetwork.RaiseEvent(eventCode, content, options, SendOptions.SendReliable);
     }
 
-    private IEnumerator LeaveRoomAndLoadLobby()
+    private void LoadLobbyScene()
     {
         if (PhotonNetwork.InRoom)
         {
-            PhotonNetwork.LeaveRoom();
-            while (PhotonNetwork.InRoom)
+            PhotonNetwork.AutomaticallySyncScene = true;
+            if (PhotonNetwork.IsMasterClient)
             {
-                yield return null;
+                PhotonNetwork.LoadLevel(lobbySceneName);
             }
+
+            return;
         }
 
         SceneManager.LoadScene(lobbySceneName);
@@ -339,6 +380,23 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
+    private void SetupVolumeSlider()
+    {
+        if (volumeSlider == null)
+        {
+            return;
+        }
+
+        volumeSlider.SetValueWithoutNotify(AudioListener.volume);
+        volumeSlider.onValueChanged.RemoveListener(OnVolumeChanged);
+        volumeSlider.onValueChanged.AddListener(OnVolumeChanged);
+    }
+
+    public void OnVolumeChanged(float value)
+    {
+        AudioListener.volume = value;
+    }
+
     private void HidePanels()
     {
         if (votePanel != null)
@@ -349,6 +407,14 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (settingsPanel != null)
         {
             settingsPanel.SetActive(false);
+        }
+    }
+
+    private void SetButtonVisible(Button button, bool visible)
+    {
+        if (button != null)
+        {
+            button.gameObject.SetActive(visible);
         }
     }
 
@@ -367,14 +433,50 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void SetStatus(string message)
     {
+        if (statusText == null)
+        {
+            AutoAssignTextReferences();
+        }
+
         if (statusText != null)
         {
             statusText.text = message;
+        }
+        else
+        {
+            Debug.LogWarning("[GameOverVoteManager] Status Text is not assigned.");
         }
     }
 
     private string ChoiceToText(VoteChoice choice)
     {
         return choice == VoteChoice.Continue ? "Restart" : "Exit";
+    }
+
+    private void AutoAssignTextReferences()
+    {
+        if (votePanel == null || (titleText != null && statusText != null))
+        {
+            return;
+        }
+
+        TMP_Text[] texts = votePanel.GetComponentsInChildren<TMP_Text>(true);
+        foreach (TMP_Text text in texts)
+        {
+            string lowerName = text.name.ToLower();
+            string lowerText = text.text.ToLower();
+
+            if (titleText == null && (lowerName.Contains("title") || lowerText.Contains("game over")))
+            {
+                titleText = text;
+                continue;
+            }
+
+            if (statusText == null &&
+                (lowerName.Contains("status") || lowerName.Contains("vote") || lowerText.Contains("new text")))
+            {
+                statusText = text;
+            }
+        }
     }
 }

@@ -35,6 +35,14 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            OnRoomJoined();
+        }
+    }
+
     public void OnClickStart()
     {
         Debug.Log("OnClickStart called");
@@ -259,6 +267,11 @@ public class MainMenuController : MonoBehaviour
     public void OnRoomJoined()
     {
         Debug.Log("MainMenuController: room joined, entering team panel");
+        if (menuPanel != null)
+        {
+            menuPanel.SetActive(false);
+        }
+
         if (passwordPanel != null)
         {
             passwordPanel.SetActive(false);
@@ -271,6 +284,11 @@ public class MainMenuController : MonoBehaviour
             Debug.Log("LobbyPanel hidden");
         }
 
+        if (settingsPanel != null)
+        {
+            settingsPanel.SetActive(false);
+        }
+
         if (teamPanel != null)
         {
             teamPanel.SetActive(true);
@@ -280,6 +298,8 @@ public class MainMenuController : MonoBehaviour
         {
             Debug.LogError("teamPanel not assigned!");
         }
+
+        RefreshRoomUi();
     }
 
     public void OnClickBackToLobby()
@@ -328,27 +348,54 @@ public class MainMenuController : MonoBehaviour
     public void ShowStartButton()
     {
         Debug.Log("ShowStartButton called");
-        
-        if (startGameButton != null)
+        RefreshRoomUi();
+    }
+
+    // 新增：更新房间 UI
+    public void RefreshRoomUi()
+    {
+        int playerCount = PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.PlayerCount : 0;
+        int maxPlayers = PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.MaxPlayers : 2;
+
+        if (playerCountText == null)
         {
-            startGameButton.SetActive(true);
-            Debug.Log("Start Game Button shown");
+            playerCountText = FindPlayerCountText();
+        }
+
+        if (playerCountText != null)
+        {
+            playerCountText.text = $"Players: {playerCount}/{maxPlayers}";
         }
         else
         {
-            Debug.LogWarning("startGameButton not assigned in Inspector!");
+            Debug.LogWarning("[MainMenuController] playerCountText is not assigned. Drag the TeamPanel Players TMP_Text into the Player Count Text field.");
         }
 
-        UpdatePlayerCountDisplay();
+        if (startGameButton != null)
+        {
+            bool canStart = PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient && playerCount >= 1;
+            startGameButton.SetActive(canStart);
+        }
     }
 
-    // 新增：更新玩家计数显示
-    private void UpdatePlayerCountDisplay()
+    private TMP_Text FindPlayerCountText()
     {
-        if (playerCountText != null && PhotonNetwork.InRoom)
+        if (teamPanel == null)
         {
-            playerCountText.text = $"Players: {PhotonNetwork.CurrentRoom.PlayerCount}/2";
+            return null;
         }
+
+        TMP_Text[] texts = teamPanel.GetComponentsInChildren<TMP_Text>(true);
+        foreach (TMP_Text text in texts)
+        {
+            if (text.text.ToLower().Contains("players"))
+            {
+                Debug.Log("[MainMenuController] Auto-assigned playerCountText: " + text.name);
+                return text;
+            }
+        }
+
+        return null;
     }
 
     // 新增：开始游戏按钮点击事件

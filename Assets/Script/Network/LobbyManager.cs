@@ -6,6 +6,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     public MainMenuController mainMenuController;
+    private TeamPanelManager teamPanelManager;
 
     private bool isJoinWithPassword = false;
     
@@ -110,14 +111,27 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.Log("Joined Room! from LobbyManager");
         Debug.Log("Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
 
+        SetPlayerRole();
+        RefreshTeamPanel();
+
         if (mainMenuController != null)
         {
             mainMenuController.OnRoomJoined();
+            mainMenuController.RefreshRoomUi();
         }
         else
         {
             Debug.LogError("LobbyManager.mainMenuController is not assigned, cannot notify team panel.");
         }
+    }
+
+    void SetPlayerRole()
+    {
+        Player localPlayer = PhotonNetwork.LocalPlayer;
+        string role = PhotonNetwork.CurrentRoom.PlayerCount == 1 ? "P1" : "P2";
+        Hashtable playerProps = new Hashtable { { "PlayerRole", role } };
+        localPlayer.SetCustomProperties(playerProps);
+        Debug.Log($"[LobbyManager] Local player set as {role}");
     }
 
     // New player joined the room
@@ -126,6 +140,12 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.Log("Another player joined!");
         Debug.Log("Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
 
+        RefreshTeamPanel();
+        if (mainMenuController != null)
+        {
+            mainMenuController.RefreshRoomUi();
+        }
+
         if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
         {
             Debug.Log("Room Full! Both players ready.");
@@ -133,6 +153,18 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             {
                 mainMenuController.ShowStartButton();
             }
+        }
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"Player {otherPlayer.NickName} left the room!");
+        Debug.Log("Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
+        RefreshTeamPanel();
+
+        if (mainMenuController != null)
+        {
+            mainMenuController.RefreshRoomUi();
         }
     }
 
@@ -201,6 +233,25 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (photonView == null)
         {
             photonView = gameObject.AddComponent<PhotonView>();
+        }
+
+        teamPanelManager = FindObjectOfType<TeamPanelManager>(true);
+    }
+
+    private void RefreshTeamPanel()
+    {
+        if (teamPanelManager == null)
+        {
+            teamPanelManager = FindObjectOfType<TeamPanelManager>(true);
+        }
+
+        if (teamPanelManager != null)
+        {
+            teamPanelManager.UpdatePlayerStatus();
+        }
+        else
+        {
+            Debug.LogWarning("[LobbyManager] TeamPanelManager not found. P1/P2 status will not update.");
         }
     }
 }
