@@ -3,6 +3,7 @@ using UnityEngine;
 public class DeadCollied : MonoBehaviour
 {
     [SerializeField] Movement movement;
+    [SerializeField] string EachDeadCollide;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,7 +23,13 @@ public class DeadCollied : MonoBehaviour
             movement.Die();
             Invoke("StopGame", 2);
         }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
+        {
+            movement.Die();
+            Invoke("WinGame", 2);
+        }
     }
+
 
     private void OnCollisionStay(Collision collision)
     {
@@ -31,8 +38,37 @@ public class DeadCollied : MonoBehaviour
             movement.Die();
             Invoke("StopGame", 2);
         }
+        else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
+        {
+            movement.Die();
+            Invoke("WinGame", 2);
+        }
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
+        {
+            movement.Die();
+            Invoke("StopGame", 2);
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
+        {
+            movement.Die();
+            Invoke("StopGame", 2);
+        }
+    }
+
     void StopGame() 
+    {
+        UnityEditor.EditorApplication.isPlaying = false;
+    }
+
+    void WinGame()
     {
         UnityEditor.EditorApplication.isPlaying = false;
     }
