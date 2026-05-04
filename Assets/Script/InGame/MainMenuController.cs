@@ -280,8 +280,6 @@ public class MainMenuController : MonoBehaviour
         {
             Debug.LogError("teamPanel not assigned!");
         }
-
-        RefreshRoomUi();
     }
 
     public void OnClickBackToLobby()
@@ -330,32 +328,26 @@ public class MainMenuController : MonoBehaviour
     public void ShowStartButton()
     {
         Debug.Log("ShowStartButton called");
-        RefreshRoomUi();
-    }
-
-    // 新增：更新房间 UI
-    public void RefreshRoomUi()
-    {
-        int playerCount = PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.PlayerCount : 0;
-        int maxPlayers = PhotonNetwork.InRoom ? PhotonNetwork.CurrentRoom.MaxPlayers : 2;
-
-        if (playerCountText != null)
-        {
-            playerCountText.text = $"Players: {playerCount}/{maxPlayers}";
-        }
-        else
-        {
-            Debug.LogWarning("playerCountText not assigned in Inspector!");
-        }
-
+        
         if (startGameButton != null)
         {
-            bool canStart = PhotonNetwork.InRoom && PhotonNetwork.IsMasterClient && playerCount >= 1;
-            startGameButton.SetActive(canStart);
+            startGameButton.SetActive(true);
+            Debug.Log("Start Game Button shown");
         }
         else
         {
             Debug.LogWarning("startGameButton not assigned in Inspector!");
+        }
+
+        UpdatePlayerCountDisplay();
+    }
+
+    // 新增：更新玩家计数显示
+    private void UpdatePlayerCountDisplay()
+    {
+        if (playerCountText != null && PhotonNetwork.InRoom)
+        {
+            playerCountText.text = $"Players: {PhotonNetwork.CurrentRoom.PlayerCount}/2";
         }
     }
 
