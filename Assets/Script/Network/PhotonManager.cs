@@ -25,6 +25,7 @@ public class PhotonManager : MonoBehaviourPunCallbacks
     void Start()
     {
         PhotonNetwork.GameVersion = "1.0";
+        PhotonNetwork.AutomaticallySyncScene = true;
         ConnectToServer();
     }
 
