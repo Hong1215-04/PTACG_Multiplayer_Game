@@ -4,7 +4,13 @@ using static UnityEngine.Rendering.DebugUI.Table;
 public class CamaraMovement : MonoBehaviour
 {
     [SerializeField] Transform player;
-    [SerializeField] Transform CameraPosition; 
+    [SerializeField] Transform CameraPosition;
+
+    [SerializeField] float FrontRotation;
+    [SerializeField] float LeftRotation;
+    [SerializeField] float RightRotation;
+    [SerializeField] float BackRotation;
+
     Vector3 Offset;
     //Vector3 OffsetRight;
     //Vector3 OffsetLeft;
@@ -46,7 +52,7 @@ public class CamaraMovement : MonoBehaviour
     {
         if (Front)
         {
-            transform.eulerAngles = new Vector3(originalX, 180, originalZ);
+            transform.eulerAngles = new Vector3(originalX, FrontRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(CameraPosition.position.x, player.position.y, player.position.z);
             transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
@@ -57,7 +63,7 @@ public class CamaraMovement : MonoBehaviour
             //targetPos.y = player.position.y + OffsetBack.y;
             //targetPos.x = CameraPosition.position.x;
             //targetPos.z = player.position.z + OffsetBack.z;
-            transform.eulerAngles = new Vector3(originalX, 0, originalZ);
+            transform.eulerAngles = new Vector3(originalX, BackRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3 (CameraPosition.position.x, player.position.y, player.position.z);
             transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
@@ -65,14 +71,14 @@ public class CamaraMovement : MonoBehaviour
         }
         else if (Left)
         {
-            transform.eulerAngles = new Vector3(originalX, 90, originalZ);
+            transform.eulerAngles = new Vector3(originalX, LeftRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
             transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
         }
         else if (Right)
         {
-            transform.eulerAngles = new Vector3(originalX, 270, originalZ);
+            transform.eulerAngles = new Vector3(originalX, RightRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
             transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;

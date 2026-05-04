@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - Trigger
   layers:
   - Default
   - TransparentFX
@@ -13,10 +14,10 @@ TagManager:
   - UI
   - Dead
   - Ground
-  - YellowDead
-  - RedDead
-  - 
-  - 
+  - P1Dead
+  - P2Dead
+  - Player1
+  - Player2
   - 
   - 
   - 
