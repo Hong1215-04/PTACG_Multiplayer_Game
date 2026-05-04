@@ -18,18 +18,27 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private enum VoteChoice
     {
         Continue = 1,
-        Exit = 2
+        Exit = 2,
+        Next = 3
+    }
+
+    private enum VoteContext
+    {
+        Death = 1,
+        LevelComplete = 2
     }
 
     public static GameOverVoteManager Instance { get; private set; }
 
     [Header("Scene")]
     [SerializeField] private string lobbySceneName = "MenuScene";
+    [SerializeField] private string nextLevelSceneName = "";
 
     [Header("Canvas UI")]
     [SerializeField] private GameObject votePanel;
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text statusText;
+    [SerializeField] private Button nextLevelButton;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button exitLobbyButton;
     [SerializeField] private Button settingsButton;
@@ -40,6 +49,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
     [SerializeField] private Slider volumeSlider;
 
     private readonly Dictionary<int, VoteChoice> votes = new Dictionary<int, VoteChoice>();
+    private VoteContext currentContext = VoteContext.Death;
     private bool voteStarted;
     private bool decisionApplied;
 
@@ -61,6 +71,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         Instance = this;
         AutoAssignTextReferences();
+        AutoAssignButtonReferences();
         HookButtons();
         SetupVolumeSlider();
         HidePanels();
@@ -101,12 +112,40 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (PhotonNetwork.InRoom)
         {
-            RaiseEventToAll(ShowVoteEventCode, "A player died.");
+            RaiseEventToAll(ShowVoteEventCode, new object[] { (int)VoteContext.Death, "A player died." });
         }
         else
         {
-            ShowVotePanel("A player died.");
+            ShowVotePanel(VoteContext.Death, "A player died.");
         }
+    }
+
+    public void ShowLevelCompleteVote()
+    {
+        if (voteStarted)
+        {
+            return;
+        }
+
+        if (votePanel == null)
+        {
+            Debug.LogError("[GameOverVoteManager] votePanel is not assigned. Assign your level complete vote UI panel.");
+            return;
+        }
+
+        if (PhotonNetwork.InRoom)
+        {
+            RaiseEventToAll(ShowVoteEventCode, new object[] { (int)VoteContext.LevelComplete, "Level complete!" });
+        }
+        else
+        {
+            ShowVotePanel(VoteContext.LevelComplete, "Level complete!");
+        }
+    }
+
+    public void VoteNextLevel()
+    {
+        SubmitLocalVote(VoteChoice.Next);
     }
 
     public void VoteRestart()
@@ -166,7 +205,11 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
             return;
         }
 
-        SetButtonsInteractable(false);
+        if (currentContext != VoteContext.LevelComplete)
+        {
+            SetButtonsInteractable(false);
+        }
+
         SetStatus($"Your vote: {ChoiceToText(choice)}. Waiting for other player...");
 
         int actorNumber = PhotonNetwork.InRoom ? PhotonNetwork.LocalPlayer.ActorNumber : 1;
@@ -180,7 +223,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         }
     }
 
-    private void ShowVotePanel(string reason)
+    private void ShowVotePanel(VoteContext context, string reason)
     {
         if (voteStarted)
         {
@@ -189,8 +232,10 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         voteStarted = true;
         decisionApplied = false;
+        currentContext = context;
         votes.Clear();
         AutoAssignTextReferences();
+        AutoAssignButtonReferences();
 
         votePanel.SetActive(true);
         if (settingsPanel != null)
@@ -200,10 +245,19 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
         if (titleText != null)
         {
-            titleText.text = "Game Over";
+            titleText.text = context == VoteContext.LevelComplete ? "Level Complete" : "Game Over";
         }
 
-        SetStatus(reason + "\nVote to restart or return to lobby.");
+        if (context == VoteContext.LevelComplete)
+        {
+            SetStatus(reason + "\nVote for next level, restart, or lobby.");
+        }
+        else
+        {
+            SetStatus(reason + "\nVote to restart or return to lobby.");
+        }
+
+        SetButtonVisible(nextLevelButton, context == VoteContext.LevelComplete);
         SetButtonVisible(restartButton, true);
         SetButtonVisible(exitLobbyButton, true);
         SetButtonVisible(settingsButton, true);
@@ -223,6 +277,50 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         if (votes.Count < expectedVotes)
         {
             BroadcastStatus($"Votes: {votes.Count}/{expectedVotes}. Waiting...");
+            return;
+        }
+
+        if (currentContext == VoteContext.LevelComplete)
+        {
+            int nextVotes = 0;
+            int restartVotes = 0;
+            int exitVotes = 0;
+
+            foreach (VoteChoice vote in votes.Values)
+            {
+                if (vote == VoteChoice.Next)
+                {
+                    nextVotes++;
+                }
+                else if (vote == VoteChoice.Continue)
+                {
+                    restartVotes++;
+                }
+                else if (vote == VoteChoice.Exit)
+                {
+                    exitVotes++;
+                }
+            }
+
+            if (exitVotes == expectedVotes)
+            {
+                ApplyDecisionToAll(VoteChoice.Exit);
+                return;
+            }
+
+            if (nextVotes == expectedVotes)
+            {
+                ApplyDecisionToAll(VoteChoice.Next);
+                return;
+            }
+
+            if (restartVotes == expectedVotes)
+            {
+                ApplyDecisionToAll(VoteChoice.Continue);
+                return;
+            }
+
+            BroadcastStatus("Votes are split. Both players must choose the same option.");
             return;
         }
 
@@ -270,19 +368,13 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
             return;
         }
 
-        SetStatus("Restarting level...");
-        if (PhotonNetwork.InRoom)
+        if (decision == VoteChoice.Next)
         {
-            PhotonNetwork.AutomaticallySyncScene = true;
-            if (PhotonNetwork.IsMasterClient)
-            {
-                PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().name);
-            }
+            LoadNextLevel();
+            return;
         }
-        else
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        }
+
+        RestartCurrentLevel();
     }
 
     public void OnEvent(EventData photonEvent)
@@ -290,7 +382,8 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         switch (photonEvent.Code)
         {
             case ShowVoteEventCode:
-                ShowVotePanel((string)photonEvent.CustomData);
+                object[] showData = (object[])photonEvent.CustomData;
+                ShowVotePanel((VoteContext)(int)showData[0], (string)showData[1]);
                 break;
             case SubmitVoteEventCode:
                 object[] voteData = (object[])photonEvent.CustomData;
@@ -353,12 +446,59 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         SceneManager.LoadScene(lobbySceneName);
     }
 
+    private void LoadNextLevel()
+    {
+        if (string.IsNullOrEmpty(nextLevelSceneName))
+        {
+            Debug.LogWarning("[GameOverVoteManager] Next Level Scene Name is empty. Restarting current level instead.");
+            RestartCurrentLevel();
+            return;
+        }
+
+        SetStatus("Loading next level...");
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.AutomaticallySyncScene = true;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.LoadLevel(nextLevelSceneName);
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene(nextLevelSceneName);
+        }
+    }
+
+    private void RestartCurrentLevel()
+    {
+        SetStatus("Restarting level...");
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.AutomaticallySyncScene = true;
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.LoadLevel(SceneManager.GetActiveScene().name);
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
+
     private void HookButtons()
     {
         if (restartButton != null)
         {
             restartButton.onClick.RemoveListener(VoteRestart);
             restartButton.onClick.AddListener(VoteRestart);
+        }
+
+        if (nextLevelButton != null)
+        {
+            nextLevelButton.onClick.RemoveListener(VoteNextLevel);
+            nextLevelButton.onClick.AddListener(VoteNextLevel);
         }
 
         if (exitLobbyButton != null)
@@ -425,6 +565,11 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
             restartButton.interactable = interactable;
         }
 
+        if (nextLevelButton != null)
+        {
+            nextLevelButton.interactable = interactable;
+        }
+
         if (exitLobbyButton != null)
         {
             exitLobbyButton.interactable = interactable;
@@ -450,6 +595,11 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private string ChoiceToText(VoteChoice choice)
     {
+        if (choice == VoteChoice.Next)
+        {
+            return "Next Level";
+        }
+
         return choice == VoteChoice.Continue ? "Restart" : "Exit";
     }
 
@@ -476,6 +626,29 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
                 (lowerName.Contains("status") || lowerName.Contains("vote") || lowerText.Contains("new text")))
             {
                 statusText = text;
+            }
+        }
+    }
+
+    private void AutoAssignButtonReferences()
+    {
+        if (votePanel == null || nextLevelButton != null)
+        {
+            return;
+        }
+
+        Button[] buttons = votePanel.GetComponentsInChildren<Button>(true);
+        foreach (Button button in buttons)
+        {
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+            string buttonName = button.name.ToLower();
+            string labelText = label != null ? label.text.ToLower() : "";
+
+            if (buttonName.Contains("next") || labelText.Contains("next level"))
+            {
+                nextLevelButton = button;
+                Debug.Log("[GameOverVoteManager] Auto-assigned Next Level Button: " + button.name);
+                return;
             }
         }
     }

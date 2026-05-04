@@ -21,11 +21,11 @@ public class DeadCollied : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
         {
-            EndGame();
+            EndGame(false);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            EndGame();
+            EndGame(true);
         }
     }
 
@@ -33,31 +33,39 @@ public class DeadCollied : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
         {
-            EndGame();
+            EndGame(false);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            EndGame();
+            EndGame(true);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(EachPlayerDeadlayer))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            EndGame();
+            EndGame(true);
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer(EachPlayerDeadlayer))
+        {
+            EndGame(false);
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(EachPlayerDeadlayer))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            EndGame();
+            EndGame(true);
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer(EachPlayerDeadlayer))
+        {
+            EndGame(false);
         }
     }
 
-    void EndGame()
+    void EndGame(bool completedLevel)
     {
         if (gameEnded)
         {
@@ -74,6 +82,13 @@ public class DeadCollied : MonoBehaviour
             return;
         }
 
-        voteManager.ShowDeathVote();
+        if (completedLevel)
+        {
+            voteManager.ShowLevelCompleteVote();
+        }
+        else
+        {
+            voteManager.ShowDeathVote();
+        }
     }
 }
