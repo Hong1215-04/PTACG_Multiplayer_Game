@@ -11,9 +11,9 @@ public class Movement : MonoBehaviour
     [SerializeField] float HoriSpeed = 5;
     [SerializeField] float JumpForce = 100f;
     [SerializeField] LayerMask groundMask;
-    [SerializeField] CamaraMovement cameraMovement;
-    
- 
+    public CamaraMovement cameraMovement;
+    public GameObject Camera;
+
     float horizontalInput;
     public Rigidbody rb;
     //float yRotation;
@@ -107,4 +107,9 @@ public class Movement : MonoBehaviour
     {
         alive = false;
     }
+
+    //public CamaraMovement ReturnCamMove()
+    //{
+    //    return cameraMovement;
+    //}
 }

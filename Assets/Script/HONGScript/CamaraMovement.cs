@@ -4,7 +4,7 @@ using static UnityEngine.Rendering.DebugUI.Table;
 public class CamaraMovement : MonoBehaviour
 {
     [SerializeField] Transform player;
-    [SerializeField] Transform CameraPosition;
+    public Transform CameraPosition;
 
     [SerializeField] float FrontRotation;
     [SerializeField] float LeftRotation;
@@ -36,7 +36,7 @@ public class CamaraMovement : MonoBehaviour
         originalX = CameraBasedRotation.x;
         originalZ = CameraBasedRotation.z;
 
-        Offset = transform.position - player.position;
+        Offset = CameraPosition.transform.position - player.position;
         HeightOffSet = Offset.y;
         ForwardOffSet = Offset.z;
 
