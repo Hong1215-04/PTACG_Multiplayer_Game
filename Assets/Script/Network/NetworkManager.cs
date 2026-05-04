@@ -11,7 +11,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("成功连接到 Photon Master Server!");
+        Debug.Log("Connected to Photon Master Server!");
         //Join a random room. If no room is available, it will create one.
     }
 

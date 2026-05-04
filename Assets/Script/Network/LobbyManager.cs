@@ -6,6 +6,7 @@ using Hashtable = ExitGames.Client.Photon.Hashtable;
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     public MainMenuController mainMenuController;
+    private TeamPanelManager teamPanelManager;
 
     private bool isJoinWithPassword = false;
     
@@ -110,13 +111,53 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.Log("Joined Room! from LobbyManager");
         Debug.Log("Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
 
+        // Set player role: first player is P1 (Master Client), second player is P2 (Joiner)
+        SetPlayerRole();
+
+        // Update UI display player status
+        if (teamPanelManager != null)
+        {
+            Debug.Log("[LobbyManager] teamPanelManager found, calling UpdatePlayerStatus");
+            teamPanelManager.UpdatePlayerStatus();
+        }
+        else
+        {
+            Debug.LogError("[LobbyManager] teamPanelManager is NULL!");
+        }
+
         if (mainMenuController != null)
         {
             mainMenuController.OnRoomJoined();
+            mainMenuController.RefreshRoomUi();
         }
         else
         {
             Debug.LogError("LobbyManager.mainMenuController is not assigned, cannot notify team panel.");
+        }
+    }
+
+    /// <summary>
+    /// Set player role based on room player count. First player is P1, second player is P2.
+    /// </summary>
+    void SetPlayerRole()
+    {
+        Player localPlayer = PhotonNetwork.LocalPlayer;
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+        {
+            // Only local player (master client), mark as P1
+            Hashtable playerProps = new Hashtable { { "PlayerRole", "P1" } };
+            localPlayer.SetCustomProperties(playerProps);
+            Debug.Log("[LobbyManager] Local player set as P1 (Master Client)");
+            Debug.Log($"[LobbyManager] Local player custom properties: {string.Join(", ", playerProps.Keys)}");
+        }
+        else if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
+        {
+            // Two players, local player is P2 (Joiner)
+            Hashtable playerProps = new Hashtable { { "PlayerRole", "P2" } };
+            localPlayer.SetCustomProperties(playerProps);
+            Debug.Log("[LobbyManager] Local player set as P2 (Joiner)");
+            Debug.Log($"[LobbyManager] Local player custom properties: {string.Join(", ", playerProps.Keys)}");
         }
     }
 
@@ -126,6 +167,17 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         Debug.Log("Another player joined!");
         Debug.Log("Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
 
+        // Update UI display player status
+        if (teamPanelManager != null)
+        {
+            teamPanelManager.UpdatePlayerStatus();
+        }
+
+        if (mainMenuController != null)
+        {
+            mainMenuController.RefreshRoomUi();
+        }
+
         if (PhotonNetwork.CurrentRoom.PlayerCount == 2)
         {
             Debug.Log("Room Full! Both players ready.");
@@ -133,6 +185,24 @@ public class LobbyManager : MonoBehaviourPunCallbacks
             {
                 mainMenuController.ShowStartButton();
             }
+        }
+    }
+
+    // Player left the room
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log($"Player {otherPlayer.NickName} left the room!");
+        Debug.Log("Player Count: " + PhotonNetwork.CurrentRoom.PlayerCount);
+
+        // Update UI display player status (show if a player is offline)
+        if (teamPanelManager != null)
+        {
+            teamPanelManager.UpdatePlayerStatus();
+        }
+
+        if (mainMenuController != null)
+        {
+            mainMenuController.RefreshRoomUi();
         }
     }
 
@@ -145,7 +215,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // 游戏开始 - 由房主调用
+    // Start game - called by master client
     public void StartGame()
     {
         Debug.Log("StartGame() called");
@@ -184,7 +254,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         }
     }
 
-    // 获取 PhotonView 组件（用于 RPC）
+    // Get PhotonView component (for RPC)
     private PhotonView photonView;
 
     private void Start()
@@ -193,6 +263,17 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (photonView == null)
         {
             photonView = gameObject.AddComponent<PhotonView>();
+        }
+
+        // Get TeamPanelManager reference
+        teamPanelManager = FindObjectOfType<TeamPanelManager>();
+        if (teamPanelManager == null)
+        {
+            Debug.LogWarning("[LobbyManager] TeamPanelManager not found, player status will not update");
+        }
+        else
+        {
+            Debug.Log("[LobbyManager] TeamPanelManager found and assigned");
         }
     }
 }
