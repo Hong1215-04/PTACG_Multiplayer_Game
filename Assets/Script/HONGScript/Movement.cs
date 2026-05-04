@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using Photon.Pun;
 
 public class Movement : MonoBehaviour
 {
@@ -17,7 +16,6 @@ public class Movement : MonoBehaviour
  
     float horizontalInput;
     public Rigidbody rb;
-    private PhotonView photonView;
     //float yRotation;
     //float RotationSpeed = 200f;
 
@@ -28,22 +26,6 @@ public class Movement : MonoBehaviour
     {
         alive = true;
         CAN_Turn = true;
-        
-        // Get PhotonView component
-        photonView = GetComponent<PhotonView>();
-        if (photonView == null)
-        {
-            Debug.LogError("Movement: PhotonView component not found on " + gameObject.name);
-        }
-        
-        // Disable camera for remote players
-        if (photonView != null && !photonView.IsMine)
-        {
-            if (cameraMovement != null)
-            {
-                cameraMovement.enabled = false;
-            }
-        }
     }
 
     private void FixedUpdate()
@@ -60,12 +42,6 @@ public class Movement : MonoBehaviour
     void Update()
     {
         if (!alive) return;
-        
-        // Only local player can read input
-        if (photonView != null && !photonView.IsMine)
-        {
-            return;
-        }
 
         horizontalInput = Input.GetAxis("Horizontal");
 
