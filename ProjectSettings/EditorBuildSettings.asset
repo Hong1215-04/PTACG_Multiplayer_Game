@@ -21,7 +21,7 @@ EditorBuildSettings:
     path: Assets/WJ FOLDER/Scenes/Testing 1.unity
     guid: 9560f5d45adf54f4c870d8ca8bb0d62c
   - enabled: 1
-    path: Assets/WJ FOLDER/Scenes/Level1_1.unity
+    path: Assets/WJ FOLDER/Scenes/CJ_Level2_1.unity
     guid: 87ed910920a03104b97f315e4657601f
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: bc4ab1901d0c3674e8307af18fd64cb6, type: 2}
