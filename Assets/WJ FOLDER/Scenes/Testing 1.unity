@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   movement: {fileID: 589743796}
-  EachPlayerDeadlayer: P1Dead
+  EachDeadCollide: P1Dead
 --- !u!65 &61098544
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   movement: {fileID: 243217495}
-  EachPlayerDeadlayer: P2Dead
+  EachDeadCollide: P2Dead
 --- !u!54 &160836188
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -475,7 +475,12 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
+  KeyJump: 0
+  RotateLeft: 0
+  RotateRight: 0
+  MoveHori: Fire1
   cameraMovement: {fileID: 1777302607}
+  Camera: {fileID: 0}
   rb: {fileID: 243217494}
 --- !u!1 &254707427
 GameObject:
@@ -1018,7 +1023,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 243217495}
   sceneViewId: 2
   InstantiationId: 0
   isRuntimeInstantiated: 0
@@ -1616,7 +1622,12 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
+  KeyJump: 0
+  RotateLeft: 0
+  RotateRight: 0
+  MoveHori: Horizontal
   cameraMovement: {fileID: 1777302607}
+  Camera: {fileID: 0}
   rb: {fileID: 589743797}
 --- !u!54 &589743797
 Rigidbody:
@@ -2599,7 +2610,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1382983961
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3124,7 +3135,8 @@ MonoBehaviour:
   Synchronization: 3
   OwnershipTransfer: 0
   observableSearch: 2
-  ObservedComponents: []
+  ObservedComponents:
+  - {fileID: 589743796}
   sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
