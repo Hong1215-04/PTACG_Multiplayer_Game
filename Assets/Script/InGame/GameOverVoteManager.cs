@@ -236,6 +236,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         votes.Clear();
         AutoAssignTextReferences();
         AutoAssignButtonReferences();
+        CamaraMovement.PauseAllCameras();
 
         votePanel.SetActive(true);
         if (settingsPanel != null)

@@ -1,9 +1,12 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class DeadCollied : MonoBehaviour
 {
     [SerializeField] Movement movement;
+    [FormerlySerializedAs("EachPlayerDeadlayer")]
     [SerializeField] string EachDeadCollide;
+    private bool gameEnded;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -20,13 +23,11 @@ public class DeadCollied : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
         {
-            movement.Die();
-            Invoke("StopGame", 2);
+            EndGame(false);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            movement.Die();
-            Invoke("WinGame", 2);
+            EndGame(true);
         }
     }
 
@@ -35,41 +36,68 @@ public class DeadCollied : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
         {
-            movement.Die();
-            Invoke("StopGame", 2);
+            EndGame(false);
         }
         else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            movement.Die();
-            Invoke("WinGame", 2);
+            EndGame(true);
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            movement.Die();
-            Invoke("StopGame", 2);
+            EndGame(true);
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
+        {
+            EndGame(false);
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Win"))
         {
-            movement.Die();
-            Invoke("StopGame", 2);
+            EndGame(true);
+        }
+        else if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
+        {
+            EndGame(false);
         }
     }
 
-    void StopGame() 
+    void EndGame(bool completedLevel)
     {
-        UnityEditor.EditorApplication.isPlaying = false;
-    }
+        if (gameEnded)
+        {
+            return;
+        }
 
-    void WinGame()
-    {
-        UnityEditor.EditorApplication.isPlaying = false;
+        gameEnded = true;
+
+        if (movement != null)
+        {
+            movement.Die();
+        }
+
+        CamaraMovement.PauseAllCameras();
+
+        GameOverVoteManager voteManager = GameOverVoteManager.FindInstance();
+        if (voteManager == null)
+        {
+            Debug.LogError("[DeadCollied] GameOverVoteManager not found. Add it to your game scene Canvas and assign the death/win UI references.");
+            return;
+        }
+
+        if (completedLevel)
+        {
+            voteManager.ShowLevelCompleteVote();
+        }
+        else
+        {
+            voteManager.ShowDeathVote();
+        }
     }
 }

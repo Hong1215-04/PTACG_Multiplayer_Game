@@ -1824,7 +1824,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
-  cameraMovement: {fileID: 0}
+  cameraMovement: {fileID: 1114362121}
   Camera: {fileID: 0}
   rb: {fileID: 515996289}
 --- !u!54 &515996289
@@ -5404,7 +5404,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 128
-  cameraMovement: {fileID: 0}
+  cameraMovement: {fileID: 1114362121}
   Camera: {fileID: 0}
   rb: {fileID: 1138518757}
 --- !u!54 &1138518757
