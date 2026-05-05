@@ -11,6 +11,12 @@ public class Movement : MonoBehaviour
     [SerializeField] float HoriSpeed = 5;
     [SerializeField] float JumpForce = 100f;
     [SerializeField] LayerMask groundMask;
+    [SerializeField] KeyCode KeyJump;
+    [SerializeField] KeyCode RotateLeft;
+    [SerializeField] KeyCode RotateRight;
+
+    public string MoveHori;
+
     public CamaraMovement cameraMovement;
     public GameObject Camera;
 
@@ -43,15 +49,16 @@ public class Movement : MonoBehaviour
     {
         if (!alive) return;
 
-        horizontalInput = Input.GetAxis("Horizontal");
+        horizontalInput = Input.GetAxis(MoveHori);
 
         float height = GetComponent<Collider>().bounds.size.y;
         bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.6f, groundMask);
+ 
 
         if (isGrounded)
         {
             Debug.Log("Ground");
-            if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyJump))
             {
                 Debug.Log("JUMPress");
                 Jump();
@@ -64,13 +71,13 @@ public class Movement : MonoBehaviour
         }
         if (CAN_Turn == true)
         {
-            if (Input.GetKeyDown(KeyCode.Q))
+            if (Input.GetKeyDown(RotateLeft))
             {
                 StartCoroutine(TurnLeft());
                 cameraMovement.RotatingLeft();
                 CAN_Turn = false;
             }
-            else if (Input.GetKeyDown(KeyCode.E))
+            else if (Input.GetKeyDown(RotateRight))
             {
                 StartCoroutine(TurnRight());
                 cameraMovement.RotatingRight();

@@ -2681,7 +2681,7 @@ MonoBehaviour:
   passwordInputField: {fileID: 688398010}
   errorText: {fileID: 1821582839}
   lobbyManager: {fileID: 806436175}
-  gameSceneName: Testing 1
+  gameSceneName: Testing
 --- !u!4 &1042532848
 Transform:
   m_ObjectHideFlags: 0
