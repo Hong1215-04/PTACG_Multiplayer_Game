@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using Photon.Pun;
 
 public class Movement : MonoBehaviour
 {
@@ -23,7 +22,6 @@ public class Movement : MonoBehaviour
 
     float horizontalInput;
     public Rigidbody rb;
-    private PhotonView photonView;
     //float yRotation;
     //float RotationSpeed = 200f;
 
@@ -34,15 +32,11 @@ public class Movement : MonoBehaviour
     {
         alive = true;
         CAN_Turn = true;
-        photonView = GetComponent<PhotonView>();
     }
 
     private void FixedUpdate()
     {
         if (!alive) return;
-        
-        // Only control this player if it's owned by the local player
-        if (photonView != null && !photonView.IsMine) return;
         // forwardMove & horizontalmove is just variable (name) not function
 
         Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
@@ -54,9 +48,6 @@ public class Movement : MonoBehaviour
     void Update()
     {
         if (!alive) return;
-        
-        // Only accept input from the local player who owns this object
-        if (photonView != null && !photonView.IsMine) return;
 
         horizontalInput = Input.GetAxis(MoveHori);
 

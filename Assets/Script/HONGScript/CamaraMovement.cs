@@ -1,5 +1,4 @@
 using UnityEngine;
-using Photon.Pun;
 
 public class CamaraMovement : MonoBehaviour
 {
@@ -12,6 +11,11 @@ public class CamaraMovement : MonoBehaviour
     [SerializeField] float BackRotation;
 
     Vector3 Offset;
+    //Vector3 OffsetRight;
+    //Vector3 OffsetLeft;
+    //Vector3 OffsetBack;
+
+    //Vector3 CamerBasedRotation;
     private float originalX;
     private float originalZ;
 
@@ -23,11 +27,11 @@ public class CamaraMovement : MonoBehaviour
     private float HeightOffSet;
     private float ForwardOffSet;
     private bool paused;
-    private PhotonView photonView;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        //Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
         Vector3 CameraBasedRotation = CameraPosition.transform.eulerAngles;
         originalX = CameraBasedRotation.x;
         originalZ = CameraBasedRotation.z;
@@ -40,8 +44,7 @@ public class CamaraMovement : MonoBehaviour
         Right = false;
         Front = true;
         Back = false;
-        
-        photonView = GetComponent<PhotonView>();
+
     }
 
     // Update is called once per frame
@@ -89,9 +92,6 @@ public class CamaraMovement : MonoBehaviour
 
     public void RotatingLeft()
     {
-        // Only allow rotation if this camera is owned by the local player
-        if (photonView != null && !photonView.IsMine) return;
-        
         if (Front)
         {
             Left = true;
@@ -120,8 +120,8 @@ public class CamaraMovement : MonoBehaviour
 
     public void RotatingRight()
     {
-        // Only allow rotation if this camera is owned by the local player
-        if (photonView != null && !photonView.IsMine) return;
+        //Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
+        //transform.rotation = transform.rotation * RotateRight;
         
         if (Front)
         {
