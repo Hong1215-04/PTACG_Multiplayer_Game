@@ -1,5 +1,4 @@
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class CamaraMovement : MonoBehaviour
 {
@@ -27,6 +26,7 @@ public class CamaraMovement : MonoBehaviour
 
     private float HeightOffSet;
     private float ForwardOffSet;
+    private bool paused;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -50,6 +50,11 @@ public class CamaraMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (paused)
+        {
+            return;
+        }
+
         if (Front)
         {
             transform.eulerAngles = new Vector3(originalX, FrontRotation, originalZ);
@@ -147,5 +152,33 @@ public class CamaraMovement : MonoBehaviour
     void RecordCamPosition()
     {
         CameraPosition.position = player.position;
+    }
+
+    public void PauseCamera()
+    {
+        paused = true;
+    }
+
+    public void ResumeCamera()
+    {
+        paused = false;
+    }
+
+    public static void PauseAllCameras()
+    {
+        CamaraMovement[] cameras = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
+        foreach (CamaraMovement camera in cameras)
+        {
+            camera.PauseCamera();
+        }
+    }
+
+    public static void ResumeAllCameras()
+    {
+        CamaraMovement[] cameras = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
+        foreach (CamaraMovement camera in cameras)
+        {
+            camera.ResumeCamera();
+        }
     }
 }
