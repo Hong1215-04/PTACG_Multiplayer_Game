@@ -32,7 +32,7 @@ public class CamaraMovement : MonoBehaviour
     void Start()
     {
         //Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
-        Vector3 CameraBasedRotation = transform.eulerAngles;
+        Vector3 CameraBasedRotation = CameraPosition.transform.eulerAngles;
         originalX = CameraBasedRotation.x;
         originalZ = CameraBasedRotation.z;
 
