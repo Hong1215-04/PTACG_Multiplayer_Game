@@ -703,7 +703,7 @@ MonoBehaviour:
   KeyJump: 273
   RotateLeft: 257
   RotateRight: 258
-  MoveHori: Fire1
+  MoveHori: Vertical
   cameraMovement: {fileID: 508027434}
   Camera: {fileID: 508027432}
   rb: {fileID: 243217494}
