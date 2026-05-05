@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Serialization;
+using Photon.Pun;
 
 public class DeadCollied : MonoBehaviour
 {
@@ -7,10 +8,11 @@ public class DeadCollied : MonoBehaviour
     [FormerlySerializedAs("EachPlayerDeadlayer")]
     [SerializeField] string EachDeadCollide;
     private bool gameEnded;
+    private PhotonView photonView;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -70,6 +72,12 @@ public class DeadCollied : MonoBehaviour
 
     void EndGame(bool completedLevel)
     {
+        // Only the owner of this object processes the collision
+        if (photonView != null && !photonView.IsMine)
+        {
+            return;
+        }
+        
         if (gameEnded)
         {
             return;

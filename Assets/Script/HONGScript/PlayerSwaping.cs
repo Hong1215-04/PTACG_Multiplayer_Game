@@ -1,4 +1,5 @@
 using UnityEngine;
+using Photon.Pun;
 
 public class PlayerSwaping : MonoBehaviour
 {
@@ -7,16 +8,13 @@ public class PlayerSwaping : MonoBehaviour
 
     bool canDo;
     private float time;
-
-    //private Movement CameraP2;
-    //private Movement CameraP1;
-    //private Transform CameraChangePos;
-    //private Transform CameraOriPos;
+    private PhotonView photonView;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         canDo = true;
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -42,7 +40,7 @@ public class PlayerSwaping : MonoBehaviour
 
                 foreach (Movement m in AllPlayer)
                 {
-                    if (m.gameObject != this)
+                    if (m.gameObject != this.gameObject)
                     {
                         otherplayer = m;
                         break;
@@ -51,27 +49,38 @@ public class PlayerSwaping : MonoBehaviour
 
                 if (otherplayer == null) return;
 
-                //CameraP1 = this.GetComponentInParent<Movement>();
-                //CameraP2 = otherplayer.GetComponentInParent<Movement>();
-
-                //CameraP1 = this.GetComponentInParent<Movement>().ReturnCamMove();
-                //CameraP2 = otherplayer.GetComponentInParent<Movement>().ReturnCamMove();
-
                 Vector3 thisPlayerPos = transform.position;
-                transform.position = otherplayer.transform.position;
-                otherplayer.transform.position = thisPlayerPos;
+                Vector3 otherPlayerPos = otherplayer.transform.position;
+                
+                // Broadcast swap event to all players via RPC
+                if (photonView != null)
+                {
+                    photonView.RPC("RPC_SwapPositions", RpcTarget.AllBuffered, thisPlayerPos, otherPlayerPos);
+                }
+                else
+                {
+                    ExecuteSwap(thisPlayerPos, otherPlayerPos);
+                }
 
                 canDo = false;
                 time = 0f;
             }
-
-            //Debug.Log(CameraP1.CameraPosition);
-            //Debug.Log(CameraP2.CameraPosition);
-
-            //Vector3 CameraPos = CameraP1.Camera.transform.position;
-            //CameraP1.Camera.transform.position = CameraP2.Camera.transform.position;
-            //CameraP2.Camera.transform.position = CameraPos;
-            //CameraP2.CameraPosition.transform.position = CameraP1.CameraPosition.transform.position;  
+        }
+    }
+    
+    [PunRPC]
+    void RPC_SwapPositions(Vector3 pos1, Vector3 pos2)
+    {
+        ExecuteSwap(pos1, pos2);
+    }
+    
+    void ExecuteSwap(Vector3 pos1, Vector3 pos2)
+    {
+        Movement[] AllPlayer = FindObjectsByType<Movement>(FindObjectsSortMode.None);
+        if (AllPlayer.Length >= 2)
+        {
+            AllPlayer[0].transform.position = pos2;
+            AllPlayer[1].transform.position = pos1;
         }
     }
 }

@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using Photon.Pun;
+using ExitGames.Client.Photon;
 
-public class Movement : MonoBehaviour
+public class Movement : MonoBehaviour, IPunObservable
 {
     public Transform Orientation;
 
@@ -22,6 +24,7 @@ public class Movement : MonoBehaviour
 
     float horizontalInput;
     public Rigidbody rb;
+    private PhotonView photonView;
     //float yRotation;
     //float RotationSpeed = 200f;
 
@@ -32,11 +35,21 @@ public class Movement : MonoBehaviour
     {
         alive = true;
         CAN_Turn = true;
+        photonView = GetComponent<PhotonView>();
+        
+        // Register this script as observable for network synchronization
+        if (photonView != null && !photonView.ObservedComponents.Contains(this))
+        {
+            photonView.ObservedComponents.Add(this);
+        }
     }
 
     private void FixedUpdate()
     {
         if (!alive) return;
+        
+        // Only the owner can control this player
+        if (photonView != null && !photonView.IsMine) return;
         // forwardMove & horizontalmove is just variable (name) not function
 
         Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
@@ -48,6 +61,9 @@ public class Movement : MonoBehaviour
     void Update()
     {
         if (!alive) return;
+        
+        // Only the owner receives input
+        if (photonView != null && !photonView.IsMine) return;
 
         horizontalInput = Input.GetAxis(MoveHori);
 
@@ -115,8 +131,30 @@ public class Movement : MonoBehaviour
         alive = false;
     }
 
-    //public CamaraMovement ReturnCamMove()
-    //{
-    //    return cameraMovement;
-    //}
+    // Network synchronization - sync player state across network
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // Send local player's input state to others
+            stream.SendNext(horizontalInput);
+            stream.SendNext(alive);
+            stream.SendNext(CAN_Turn);
+        }
+        else
+        {
+            // Receive remote player's input state
+            float remoteHorizontalInput = (float)stream.ReceiveNext();
+            bool remoteAlive = (bool)stream.ReceiveNext();
+            bool remoteCAN_Turn = (bool)stream.ReceiveNext();
+            
+            // Apply remote player's state
+            if (!photonView.IsMine)
+            {
+                horizontalInput = remoteHorizontalInput;
+                alive = remoteAlive;
+                CAN_Turn = remoteCAN_Turn;
+            }
+        }
+    }
 }
