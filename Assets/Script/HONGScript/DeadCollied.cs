@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Serialization;
+using Photon.Pun;
 
 public class DeadCollied : MonoBehaviour
 {
@@ -7,10 +8,11 @@ public class DeadCollied : MonoBehaviour
     [FormerlySerializedAs("EachPlayerDeadlayer")]
     [SerializeField] string EachDeadCollide;
     private bool gameEnded;
+    private PhotonView photonView;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -76,7 +78,27 @@ public class DeadCollied : MonoBehaviour
         }
 
         gameEnded = true;
-
+        
+        // Broadcast the end game event to all players via RPC
+        if (photonView != null)
+        {
+            photonView.RPC("RPC_EndGame", RpcTarget.AllBuffered, completedLevel);
+        }
+        else
+        {
+            // Fallback if no PhotonView (single player mode)
+            ExecuteEndGame(completedLevel);
+        }
+    }
+    
+    [PunRPC]
+    void RPC_EndGame(bool completedLevel)
+    {
+        ExecuteEndGame(completedLevel);
+    }
+    
+    void ExecuteEndGame(bool completedLevel)
+    {
         if (movement != null)
         {
             movement.Die();
