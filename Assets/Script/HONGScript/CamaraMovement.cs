@@ -20,10 +20,10 @@ public class CamaraMovement : MonoBehaviour
     private float originalX;
     private float originalZ;
 
-    bool Left = false;
-    bool Right = false;
-    bool Front = true;
-    bool Back = false;
+    public bool Left = false;
+    public bool Right = false;
+    public bool Front = true;
+    public bool Back = false;
 
     private float HeightOffSet;
     private float ForwardOffSet;
@@ -55,7 +55,7 @@ public class CamaraMovement : MonoBehaviour
             transform.eulerAngles = new Vector3(originalX, FrontRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(CameraPosition.position.x, player.position.y, player.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3(0, 0, ForwardOffSet) + Vector3.up * HeightOffSet; 
         }
         else if (Back)
         {
@@ -66,7 +66,7 @@ public class CamaraMovement : MonoBehaviour
             transform.eulerAngles = new Vector3(originalX, BackRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3 (CameraPosition.position.x, player.position.y, player.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3(0, 0, -ForwardOffSet) + Vector3.up * HeightOffSet; 
 
         }
         else if (Left)
@@ -74,14 +74,14 @@ public class CamaraMovement : MonoBehaviour
             transform.eulerAngles = new Vector3(originalX, LeftRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3(-ForwardOffSet, 0, 0) + Vector3.up * HeightOffSet; 
         }
         else if (Right)
         {
             transform.eulerAngles = new Vector3(originalX, RightRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3 (ForwardOffSet,0,0) + Vector3.up * HeightOffSet;
         }
     }
 
