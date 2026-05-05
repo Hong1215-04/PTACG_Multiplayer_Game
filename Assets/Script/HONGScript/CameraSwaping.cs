@@ -1,21 +1,20 @@
 using UnityEngine;
-using Photon.Pun;
 
 public class CameraSwaping : MonoBehaviour
 {
     [SerializeField] KeyCode SwapKey;
     private CamaraMovement CamMove;
+    private CamaraMovement Camera2Move;
     [SerializeField] float Cooldown;
+    [SerializeField] GameObject Camera2;
 
     bool canDo;
-    private float time;
-    private PhotonView photonView;
+    private float time; 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         canDo = true;
-        photonView = GetComponent<PhotonView>();
     }
 
     // Update is called once per frame
@@ -35,55 +34,52 @@ public class CameraSwaping : MonoBehaviour
         {
             if (canDo) 
             {
-                CamaraMovement[] AllCamera = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
+                //CamaraMovement[] AllCamera = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
 
-                CamaraMovement othercamera = null;
+                //CamaraMovement othercamera = null;
 
-                foreach (CamaraMovement c in AllCamera)
-                {
-                    if (c.gameObject != this.gameObject)
-                    {
-                        othercamera = c;
-                        break;
-                    }
-                }
+                //foreach (CamaraMovement c in AllCamera)
+                //{
+                //    if (c.gameObject != this)
+                //    {
+                //        othercamera = c;
+                //        break;
+                //    }
+                //}
 
-                if (othercamera == null) return;
+                //if (othercamera == null) return;
 
                 CamMove = this.GetComponentInParent<CamaraMovement>();
+                Camera2Move = Camera2.GetComponent<CamaraMovement>();
 
                 Vector3 thisCameraPos = CamMove.CameraPosition.position;
-                Vector3 otherCameraPos = othercamera.CameraPosition.position;
-                
-                // Broadcast camera swap event to all players via RPC
-                if (photonView != null)
-                {
-                    photonView.RPC("RPC_SwapCameras", RpcTarget.AllBuffered, thisCameraPos, otherCameraPos);
-                }
-                else
-                {
-                    ExecuteCameraSwap(thisCameraPos, otherCameraPos);
-                }
+                CamMove.CameraPosition.position = Camera2Move.CameraPosition.position;
+                Camera2Move.CameraPosition.position = thisCameraPos;
+
+                ChangeRotationBool();
 
                 canDo = false;
                 time = 0f;
             }
         }
     }
-    
-    [PunRPC]
-    void RPC_SwapCameras(Vector3 pos1, Vector3 pos2)
+
+    public void ChangeRotationBool()
     {
-        ExecuteCameraSwap(pos1, pos2);
-    }
-    
-    void ExecuteCameraSwap(Vector3 pos1, Vector3 pos2)
-    {
-        CamaraMovement[] AllCamera = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
-        if (AllCamera.Length >= 2)
-        {
-            AllCamera[0].CameraPosition.position = pos2;
-            AllCamera[1].CameraPosition.position = pos1;
-        }
+        bool nowFront = CamMove.Front;
+        CamMove.Front = Camera2Move.Front;
+        Camera2Move.Front = nowFront;
+
+        bool nowLeft = CamMove.Left;
+        CamMove.Left = Camera2Move.Left;
+        Camera2Move.Left = nowLeft;
+
+        bool nowRight = CamMove.Right;
+        CamMove.Right = Camera2Move.Right;
+        Camera2Move.Right = nowRight;
+
+        bool nowBack = CamMove.Back;
+        CamMove.Back = Camera2Move.Back;
+        Camera2Move.Back = nowBack;
     }
 }
