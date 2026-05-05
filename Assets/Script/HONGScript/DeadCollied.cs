@@ -91,21 +91,22 @@ public class DeadCollied : MonoBehaviour
         }
 
         CamaraMovement.PauseAllCameras();
+        UnityEditor.EditorApplication.isPlaying = false;
 
-        GameOverVoteManager voteManager = GameOverVoteManager.FindInstance();
-        if (voteManager == null)
-        {
-            Debug.LogError("[DeadCollied] GameOverVoteManager not found. Add it to your game scene Canvas and assign the death/win UI references.");
-            return;
-        }
+        //GameOverVoteManager voteManager = GameOverVoteManager.FindInstance();
+        //if (voteManager == null)
+        //{
+        //    Debug.LogError("[DeadCollied] GameOverVoteManager not found. Add it to your game scene Canvas and assign the death/win UI references.");
+        //    return;
+        //}
 
-        if (completedLevel)
-        {
-            voteManager.ShowLevelCompleteVote();
-        }
-        else
-        {
-            voteManager.ShowDeathVote();
-        }
+        //if (completedLevel)
+        //{
+        //    voteManager.ShowLevelCompleteVote();
+        //}
+        //else
+        //{
+        //    voteManager.ShowDeathVote();
+        //}
     }
 }
