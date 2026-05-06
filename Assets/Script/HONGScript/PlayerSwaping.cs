@@ -4,6 +4,7 @@ public class PlayerSwaping : MonoBehaviour
 {
     [SerializeField] KeyCode SwapKey;
     [SerializeField] float Cooldown;
+    [SerializeField] GameObject Player2;
 
     bool canDo;
     private float time;
@@ -36,35 +37,39 @@ public class PlayerSwaping : MonoBehaviour
         {
             if (canDo)
             {
-                Movement[] AllPlayer = FindObjectsByType<Movement>(FindObjectsSortMode.None);
-
-                Movement otherplayer = null;
-
-                foreach (Movement m in AllPlayer)
-                {
-                    if (m.gameObject != this)
-                    {
-                        otherplayer = m;
-                        break;
-                    }
-                }
-
-                if (otherplayer == null) return;
-
-                //CameraP1 = this.GetComponentInParent<Movement>();
-                //CameraP2 = otherplayer.GetComponentInParent<Movement>();
-
-                //CameraP1 = this.GetComponentInParent<Movement>().ReturnCamMove();
-                //CameraP2 = otherplayer.GetComponentInParent<Movement>().ReturnCamMove();
-
                 Vector3 thisPlayerPos = transform.position;
-                transform.position = otherplayer.transform.position;
-                otherplayer.transform.position = thisPlayerPos;
+                transform.position = Player2.transform.position;
+                Player2.transform.position = thisPlayerPos;
+
+                Quaternion thisPlayerRot = transform.rotation;
+                transform.rotation = Player2.transform.rotation;
+                Player2.transform.rotation = thisPlayerRot;
 
                 canDo = false;
                 time = 0f;
             }
 
+            //Movement[] AllPlayer = FindObjectsByType<Movement>(FindObjectsSortMode.None);
+
+            //Movement otherplayer = null;
+
+            //foreach (Movement m in AllPlayer)
+            //{
+            //    if (m.gameObject != this)
+            //    {
+            //        otherplayer = m;
+            //        break;
+            //    }
+            //}
+
+            //if (otherplayer == null) return;
+
+            //Vector3 thisPlayerPos = transform.position;
+            //transform.position = otherplayer.transform.position;
+            //otherplayer.transform.position = thisPlayerPos;
+
+            //canDo = false;
+            //time = 0f;
             //Debug.Log(CameraP1.CameraPosition);
             //Debug.Log(CameraP2.CameraPosition);
 

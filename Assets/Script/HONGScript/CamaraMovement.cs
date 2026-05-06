@@ -1,6 +1,8 @@
 using UnityEngine;
+using Photon.Pun;
+using ExitGames.Client.Photon;
 
-public class CamaraMovement : MonoBehaviour
+public class CamaraMovement : MonoBehaviour, IPunObservable
 {
     [SerializeField] Transform player;
     public Transform CameraPosition;
@@ -19,19 +21,19 @@ public class CamaraMovement : MonoBehaviour
     private float originalX;
     private float originalZ;
 
-    bool Left = false;
-    bool Right = false;
-    bool Front = true;
-    bool Back = false;
+    public bool Left = false;
+    public bool Right = false;
+    public bool Front = true;
+    public bool Back = false;
 
     private float HeightOffSet;
     private float ForwardOffSet;
     private bool paused;
+    private PhotonView photonView;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
         Vector3 CameraBasedRotation = CameraPosition.transform.eulerAngles;
         originalX = CameraBasedRotation.x;
         originalZ = CameraBasedRotation.z;
@@ -44,7 +46,14 @@ public class CamaraMovement : MonoBehaviour
         Right = false;
         Front = true;
         Back = false;
-
+        
+        photonView = GetComponent<PhotonView>();
+        
+        // Register this script as observable for network synchronization
+        if (photonView != null && !photonView.ObservedComponents.Contains(this))
+        {
+            photonView.ObservedComponents.Add(this);
+        }
     }
 
     // Update is called once per frame
@@ -60,7 +69,7 @@ public class CamaraMovement : MonoBehaviour
             transform.eulerAngles = new Vector3(originalX, FrontRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(CameraPosition.position.x, player.position.y, player.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3(0, 0, ForwardOffSet) + Vector3.up * HeightOffSet; 
         }
         else if (Back)
         {
@@ -71,7 +80,7 @@ public class CamaraMovement : MonoBehaviour
             transform.eulerAngles = new Vector3(originalX, BackRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3 (CameraPosition.position.x, player.position.y, player.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3(0, 0, -ForwardOffSet) + Vector3.up * HeightOffSet; 
 
         }
         else if (Left)
@@ -79,19 +88,22 @@ public class CamaraMovement : MonoBehaviour
             transform.eulerAngles = new Vector3(originalX, LeftRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3(-ForwardOffSet, 0, 0) + Vector3.up * HeightOffSet; 
         }
         else if (Right)
         {
             transform.eulerAngles = new Vector3(originalX, RightRotation, originalZ);
             //targetPos.x = 5.5f;
             Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
-            transform.position = targetPos + player.forward * -ForwardOffSet + Vector3.up * HeightOffSet;
+            transform.position = targetPos + new Vector3 (ForwardOffSet,0,0) + Vector3.up * HeightOffSet;
         }
     }
 
     public void RotatingLeft()
     {
+        // Only the owner can rotate the camera
+        if (photonView != null && !photonView.IsMine) return;
+        
         if (Front)
         {
             Left = true;
@@ -120,8 +132,8 @@ public class CamaraMovement : MonoBehaviour
 
     public void RotatingRight()
     {
-        //Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
-        //transform.rotation = transform.rotation * RotateRight;
+        // Only the owner can rotate the camera
+        if (photonView != null && !photonView.IsMine) return;
         
         if (Front)
         {
@@ -179,6 +191,39 @@ public class CamaraMovement : MonoBehaviour
         foreach (CamaraMovement camera in cameras)
         {
             camera.ResumeCamera();
+        }
+    }
+
+    // Network synchronization - sync camera direction state across network
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // Send camera direction state to others
+            stream.SendNext(Front);
+            stream.SendNext(Back);
+            stream.SendNext(Left);
+            stream.SendNext(Right);
+            stream.SendNext(paused);
+        }
+        else
+        {
+            // Receive remote player's camera state
+            bool remoteFront = (bool)stream.ReceiveNext();
+            bool remoteBack = (bool)stream.ReceiveNext();
+            bool remoteLeft = (bool)stream.ReceiveNext();
+            bool remoteRight = (bool)stream.ReceiveNext();
+            bool remotePaused = (bool)stream.ReceiveNext();
+            
+            // Apply remote camera state
+            if (!photonView.IsMine)
+            {
+                Front = remoteFront;
+                Back = remoteBack;
+                Left = remoteLeft;
+                Right = remoteRight;
+                paused = remotePaused;
+            }
         }
     }
 }
