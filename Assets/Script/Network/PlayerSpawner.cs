@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Photon.Pun;
 using UnityEngine;
 
@@ -6,10 +7,14 @@ public class PlayerSpawner : MonoBehaviour
     public Transform p1SpawnPoint;
     public Transform p2SpawnPoint;
 
+    public static PlayerSpawner Instance;
+
     void Start()
     {
         if (!PhotonNetwork.IsConnectedAndReady)
             return;
+
+        Instance = this;
 
         object role;
 
