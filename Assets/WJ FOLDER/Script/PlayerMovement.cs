@@ -8,9 +8,13 @@ public class PlayerMovement : MonoBehaviour
     public float horizontalSpeed = 3;
     public float rightLimit = 4f;
     public float leftLimit = -4f;
+    bool alive = true;
 
     void Update()
     {
+
+        if (!alive) return;
+
         transform.Translate(Vector3.forward * Time.deltaTime * playerSpeed, Space.World);
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
         {
@@ -26,5 +30,16 @@ public class PlayerMovement : MonoBehaviour
                 transform.Translate(Vector3.left * Time.deltaTime * horizontalSpeed * -1);
             }
         }
+    }
+
+    public void Die()
+    {
+        alive = false;
+    }
+
+    void Start()
+    {
+        alive = true;
+
     }
 }
