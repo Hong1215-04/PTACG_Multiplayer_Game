@@ -3,26 +3,28 @@ using UnityEngine;
 
 public class PlayerSetup : MonoBehaviourPun
 {
-    public Camera playerCamera;
+    [SerializeField] Camera playerCamera;
 
-    private Movement movement;
+    //private Movement movement;
 
     void Start()
     {
-        movement = GetComponentInChildren<Movement>();
+        //movement = GetComponentInChildren<Movement>();
 
         if (photonView.IsMine)
         {
-            movement.enabled = true;
+            transform.GetComponentInChildren<Movement>().enabled = true;
 
             if (playerCamera != null)
             {
+
                 playerCamera.gameObject.SetActive(true);
             }
         }
         else
         {
-            movement.enabled = false;
+            //movement.enabled = false;
+            transform.GetComponentInChildren<Movement>().enabled = false;
 
             if (playerCamera != null)
             {
