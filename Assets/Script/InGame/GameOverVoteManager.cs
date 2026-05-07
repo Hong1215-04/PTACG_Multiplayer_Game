@@ -14,6 +14,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
     private const byte SubmitVoteEventCode = 22;
     private const byte StatusEventCode = 23;
     private const byte ApplyDecisionEventCode = 24;
+    
 
     private enum VoteChoice
     {
@@ -63,6 +64,7 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void Awake()
     {
+        
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -75,6 +77,16 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         HookButtons();
         SetupVolumeSlider();
         HidePanels();
+    }
+
+    private void OnEnable()
+    {
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    private void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     public static GameOverVoteManager FindInstance()
@@ -548,6 +560,10 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
         {
             settingsPanel.SetActive(false);
         }
+
+        voteStarted = false;
+        decisionApplied = false;
+        votes.Clear();
     }
 
     private void SetButtonVisible(Button button, bool visible)
@@ -632,23 +648,50 @@ public class GameOverVoteManager : MonoBehaviourPunCallbacks, IOnEventCallback
 
     private void AutoAssignButtonReferences()
     {
-        if (votePanel == null || nextLevelButton != null)
+        if (votePanel == null)
         {
             return;
         }
 
         Button[] buttons = votePanel.GetComponentsInChildren<Button>(true);
+
         foreach (Button button in buttons)
         {
             TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+
             string buttonName = button.name.ToLower();
             string labelText = label != null ? label.text.ToLower() : "";
 
-            if (buttonName.Contains("next") || labelText.Contains("next level"))
+            // Next Level
+            if (nextLevelButton == null &&
+                (buttonName.Contains("next") || labelText.Contains("next level")))
             {
                 nextLevelButton = button;
                 Debug.Log("[GameOverVoteManager] Auto-assigned Next Level Button: " + button.name);
-                return;
+            }
+
+            // Restart
+            else if (restartButton == null &&
+                    (buttonName.Contains("restart") || labelText.Contains("restart")))
+            {
+                restartButton = button;
+                Debug.Log("[GameOverVoteManager] Auto-assigned Restart Button: " + button.name);
+            }
+
+            // Exit
+            else if (exitLobbyButton == null &&
+                    (buttonName.Contains("exit") || labelText.Contains("exit")))
+            {
+                exitLobbyButton = button;
+                Debug.Log("[GameOverVoteManager] Auto-assigned Exit Button: " + button.name);
+            }
+
+            // Settings
+            else if (settingsButton == null &&
+                    (buttonName.Contains("setting") || labelText.Contains("setting")))
+            {
+                settingsButton = button;
+                Debug.Log("[GameOverVoteManager] Auto-assigned Settings Button: " + button.name);
             }
         }
     }
