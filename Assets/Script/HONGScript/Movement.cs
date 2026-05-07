@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Photon.Pun;
 
-public class Movement : MonoBehaviourPun, IPunObservable
+public class Movement : MonoBehaviourPun
 {
     public Transform Orientation;
 
@@ -18,9 +18,6 @@ public class Movement : MonoBehaviourPun, IPunObservable
 
     public string MoveHori;
 
-    Vector3 networkPosition;
-    Quaternion networkRotation;
-
     public CamaraMovement cameraMovement;
     public GameObject Camera;
 
@@ -28,7 +25,6 @@ public class Movement : MonoBehaviourPun, IPunObservable
     public Rigidbody rb;
     //float yRotation;
     //float RotationSpeed = 200f;
-
     bool CAN_Turn;
     bool alive;
 
@@ -36,7 +32,6 @@ public class Movement : MonoBehaviourPun, IPunObservable
     {
         alive = true;
         CAN_Turn = true;
-        photonView.ObservedComponents.Add(this);
     }
 
     private void FixedUpdate()
@@ -48,10 +43,6 @@ public class Movement : MonoBehaviourPun, IPunObservable
             Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
             Vector3 horizontalMove = transform.right * horizontalInput * HoriSpeed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + forwardMove + horizontalMove);
-        }
-        else
-        {
-            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
         }
         //Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
         //Vector3 horizontalMove = transform.right * horizontalInput * HoriSpeed * Time.fixedDeltaTime;
@@ -169,22 +160,6 @@ public class Movement : MonoBehaviourPun, IPunObservable
     public void Die()
     {
         alive = false;
-    }
-
-
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    {
-        // Send data
-        if (stream.IsWriting)
-        {
-            stream.SendNext(transform.position);
-            stream.SendNext(transform.rotation);
-        }
-        else
-        {
-            networkPosition = (Vector3)stream.ReceiveNext();
-            networkRotation = (Quaternion)stream.ReceiveNext();
-        }
     }
 
     //public CamaraMovement ReturnCamMove()
