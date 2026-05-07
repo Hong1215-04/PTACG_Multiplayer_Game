@@ -9,30 +9,20 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        Debug.Log($"[PlayerSetup] photonView.IsMine = {photonView.IsMine}, Owner = {photonView.Owner?.NickName}");
+        // 从子物体找 PhotonView
+        PhotonView pv = GetComponentInChildren<PhotonView>();
         
-        //movement = GetComponentInChildren<Movement>();
-
-        if (photonView.IsMine)
+        if (pv.IsMine)
         {
-            transform.GetComponentInChildren<Movement>().enabled = true;
-
+            GetComponentInChildren<Movement>().enabled = true;
             if (playerCamera != null)
-            {
-                //playerCamera.gameObject.SetActive(true);
                 playerCamera.GetComponent<Camera>().enabled = true;
-            }
         }
         else
         {
-            //movement.enabled = false;
-            transform.GetComponentInChildren<Movement>().enabled = false;
-
+            GetComponentInChildren<Movement>().enabled = false;
             if (playerCamera != null)
-            {
-                //playerCamera.gameObject.SetActive(false);
                 playerCamera.GetComponent<Camera>().enabled = false;
-            }
         }
     }
 }
