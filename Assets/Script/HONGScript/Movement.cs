@@ -19,6 +19,7 @@ public class Movement : MonoBehaviourPun, IPunObservable
     public string MoveHori;
 
     Vector3 networkPosition;
+    Quaternion networkRotation;
 
     public CamaraMovement cameraMovement;
     public GameObject Camera;
@@ -144,8 +145,8 @@ public class Movement : MonoBehaviourPun, IPunObservable
 
     IEnumerator TurnRight()
     {
-        Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
-        transform.rotation = transform.rotation * RotateRight;
+        Quaternion rotateRight = Quaternion.Euler(0, 90, 0);
+        transform.rotation = transform.rotation * rotateRight;
         //Orientation.rotation
         yield return new WaitForSeconds(1.5f);
         CAN_Turn = true;
@@ -153,8 +154,8 @@ public class Movement : MonoBehaviourPun, IPunObservable
 
     IEnumerator TurnLeft()
     {
-        Quaternion RotateLeft = Quaternion.Euler(0, -90, 0);
-        transform.rotation = transform.rotation * RotateLeft;
+        Quaternion rotateLeft = Quaternion.Euler(0, -90, 0);
+        transform.rotation = transform.rotation * rotateLeft;
         //Orientation.rotation
         yield return new WaitForSeconds(1.5f);
         CAN_Turn = true;
@@ -170,21 +171,19 @@ public class Movement : MonoBehaviourPun, IPunObservable
         alive = false;
     }
 
-    public class Movement : MonoBehaviourPun, IPunObservable
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+        // Send data
+        if (stream.IsWriting)
         {
-            // Send data
-            if (stream.IsWriting)
-            {
-                stream.SendNext(transform.position);
-                stream.SendNext(transform.rotation);
-            }
-            else
-            {
-                networkPosition = (Vector3)stream.ReceiveNext();
-                networkRotation = (Quaternion)stream.ReceiveNext();
-            }
+            stream.SendNext(transform.position);
+            stream.SendNext(transform.rotation);
+        }
+        else
+        {
+            networkPosition = (Vector3)stream.ReceiveNext();
+            networkRotation = (Quaternion)stream.ReceiveNext();
         }
     }
 
