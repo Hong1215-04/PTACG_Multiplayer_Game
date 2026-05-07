@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0547c7c2e4aee34b93ed6337d7a187e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerVisual
-  playerRenderer: {fileID: 0}
+  playerRenderer: {fileID: 9084806475918078976}
   p1Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   p2Color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &728620092012301489
