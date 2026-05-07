@@ -44,6 +44,11 @@ public class Movement : MonoBehaviourPun
             Vector3 horizontalMove = transform.right * horizontalInput * HoriSpeed * Time.fixedDeltaTime;
             rb.MovePosition(rb.position + forwardMove + horizontalMove);
         }
+            else
+        {
+            // 加这行 ↓
+            Debug.Log($"[Remote] 对方位置: {transform.position}，PhotonView Owner: {photonView.Owner?.NickName}");
+        }
         //Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
         //Vector3 horizontalMove = transform.right * horizontalInput * HoriSpeed * Time.fixedDeltaTime;
         //rb.MovePosition(rb.position + forwardMove + horizontalMove);
