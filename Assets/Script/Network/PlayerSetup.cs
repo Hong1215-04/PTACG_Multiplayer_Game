@@ -9,6 +9,8 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        Debug.Log($"[PlayerSetup] photonView.IsMine = {photonView.IsMine}, Owner = {photonView.Owner?.NickName}");
+        
         //movement = GetComponentInChildren<Movement>();
 
         if (photonView.IsMine)
