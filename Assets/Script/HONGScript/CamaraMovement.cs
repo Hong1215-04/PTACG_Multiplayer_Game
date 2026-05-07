@@ -27,13 +27,13 @@ public class CamaraMovement : MonoBehaviour
     void Start()
     {
         // 自动寻找同一个 PlayerPrefab 里的 Character_Test
-        player = transform.parent.Find("Character_Test");
+        //player = transform.parent.Find("Character_Test");
 
-        if (player == null)
-        {
-            Debug.LogError("Character_Test not found!");
-            return;
-        }
+        //if (player == null)
+        //{
+        //    Debug.LogError("Character_Test not found!");
+        //    return;
+        //}
 
         Vector3 CameraBasedRotation = CameraPosition.transform.eulerAngles;
 
