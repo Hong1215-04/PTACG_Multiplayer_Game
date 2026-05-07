@@ -1,7 +1,7 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class PlayerSetup : MonoBehaviourPun
+public class PlayerSetup : MonoBehaviourPunCallbacks
 {
     [SerializeField] GameObject playerCamera;
 
