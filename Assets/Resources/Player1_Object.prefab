@@ -35,7 +35,7 @@ Transform:
   m_LocalScale: {x: 0.38482, y: 0.38482, z: 0.38482}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1385772446270262539}
+  - {fileID: 471427232058640138}
   - {fileID: 8248074121955112600}
   - {fileID: 1653067415249828486}
   m_Father: {fileID: 1178600934588765063}
@@ -185,8 +185,8 @@ MonoBehaviour:
   RotateLeft: 113
   RotateRight: 101
   MoveHori: Horizontal
-  cameraMovement: {fileID: 0}
-  Camera: {fileID: 0}
+  cameraMovement: {fileID: 4718080295648232381}
+  Camera: {fileID: 9168310405184164856}
   rb: {fileID: 8803635952531830479}
 --- !u!1 &2575263906776019099
 GameObject:
@@ -416,8 +416,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9e9be9d1f03e745858b846c0708989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSetup
-  playerCamera: {fileID: 2181304818005113020}
---- !u!1001 &6219236103401640332
+  playerCamera: {fileID: 9168310405184164856}
+--- !u!1001 &4899549619449600909
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -425,10 +425,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 419305548843710505}
     m_Modifications:
-    - target: {fileID: 182201598856108080, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 4378294709625587829, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
       propertyPath: m_Name
       value: Main Camera
@@ -490,13 +486,24 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
---- !u!4 &1385772446270262539 stripped
+--- !u!4 &471427232058640138 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5004742709550554247, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
-  m_PrefabInstance: {fileID: 6219236103401640332}
+  m_PrefabInstance: {fileID: 4899549619449600909}
   m_PrefabAsset: {fileID: 0}
---- !u!20 &2181304818005113020 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 5191145569334126896, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
-  m_PrefabInstance: {fileID: 6219236103401640332}
+--- !u!114 &4718080295648232381 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 182201598856108080, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
+  m_PrefabInstance: {fileID: 4899549619449600909}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9168310405184164856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5de6798d3f1656f4e98dde45bf5d8aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CamaraMovement
+--- !u!1 &9168310405184164856 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4378294709625587829, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
+  m_PrefabInstance: {fileID: 4899549619449600909}
   m_PrefabAsset: {fileID: 0}

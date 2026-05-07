@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerSetup : MonoBehaviourPun
 {
-    [SerializeField] Camera playerCamera;
+    [SerializeField] GameObject playerCamera;
 
     //private Movement movement;
 
@@ -17,8 +17,8 @@ public class PlayerSetup : MonoBehaviourPun
 
             if (playerCamera != null)
             {
-
-                playerCamera.gameObject.SetActive(true);
+                //playerCamera.gameObject.SetActive(true);
+                playerCamera.GetComponent<Camera>().enabled = true;
             }
         }
         else
@@ -28,7 +28,8 @@ public class PlayerSetup : MonoBehaviourPun
 
             if (playerCamera != null)
             {
-                playerCamera.gameObject.SetActive(false);
+                //playerCamera.gameObject.SetActive(false);
+                playerCamera.GetComponent<Camera>().enabled = false;
             }
         }
     }
