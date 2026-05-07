@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using Photon.Pun;
 
-public class Movement : MonoBehaviourPun
+public class Movement : MonoBehaviourPun, IPunObservable
 {
     public Transform Orientation;
 
@@ -98,7 +98,10 @@ public class Movement : MonoBehaviourPun
                     CAN_Turn = false;
                 }
             }
-
+            else
+            {
+                transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
+            }
         }
 
         //horizontalInput = Input.GetAxis(MoveHori);
