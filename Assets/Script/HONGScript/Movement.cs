@@ -35,6 +35,7 @@ public class Movement : MonoBehaviourPun, IPunObservable
     {
         alive = true;
         CAN_Turn = true;
+        photonView.ObservedComponents.Add(this);
     }
 
     private void FixedUpdate()
@@ -169,17 +170,21 @@ public class Movement : MonoBehaviourPun, IPunObservable
         alive = false;
     }
 
-    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    public class Movement : MonoBehaviourPun, IPunObservable
     {
-        // Send data
-        if (stream.IsWriting)
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
         {
-            stream.SendNext(transform.position);
-        }
-        // Receive data
-        else
-        {
-            networkPosition = (Vector3)stream.ReceiveNext();
+            // Send data
+            if (stream.IsWriting)
+            {
+                stream.SendNext(transform.position);
+                stream.SendNext(transform.rotation);
+            }
+            else
+            {
+                networkPosition = (Vector3)stream.ReceiveNext();
+                networkRotation = (Quaternion)stream.ReceiveNext();
+            }
         }
     }
 
