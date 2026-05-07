@@ -1,10 +1,10 @@
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class CamaraMovement : MonoBehaviour
 {
-    [SerializeField] Transform player;
     public Transform CameraPosition;
+
+    private Transform player;
 
     [SerializeField] float FrontRotation;
     [SerializeField] float LeftRotation;
@@ -12,11 +12,7 @@ public class CamaraMovement : MonoBehaviour
     [SerializeField] float BackRotation;
 
     Vector3 Offset;
-    //Vector3 OffsetRight;
-    //Vector3 OffsetLeft;
-    //Vector3 OffsetBack;
 
-    //Vector3 CamerBasedRotation;
     private float originalX;
     private float originalZ;
 
@@ -28,15 +24,24 @@ public class CamaraMovement : MonoBehaviour
     private float HeightOffSet;
     private float ForwardOffSet;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
+        // 自动寻找同一个 PlayerPrefab 里的 Character_Test
+        player = transform.parent.Find("Character_Test");
+
+        if (player == null)
+        {
+            Debug.LogError("Character_Test not found!");
+            return;
+        }
+
         Vector3 CameraBasedRotation = CameraPosition.transform.eulerAngles;
+
         originalX = CameraBasedRotation.x;
         originalZ = CameraBasedRotation.z;
 
         Offset = CameraPosition.transform.position - player.position;
+
         HeightOffSet = Offset.y;
         ForwardOffSet = Offset.z;
 
@@ -44,44 +49,72 @@ public class CamaraMovement : MonoBehaviour
         Right = false;
         Front = true;
         Back = false;
-
     }
 
-    // Update is called once per frame
     void Update()
     {
+        if (player == null)
+            return;
+
         if (Front)
         {
             transform.eulerAngles = new Vector3(originalX, FrontRotation, originalZ);
-            //targetPos.x = 5.5f;
-            Vector3 targetPos = new Vector3(CameraPosition.position.x, player.position.y, player.position.z);
-            transform.position = targetPos + new Vector3(0, 0, ForwardOffSet) + Vector3.up * HeightOffSet; 
+
+            Vector3 targetPos = new Vector3(
+                CameraPosition.position.x,
+                player.position.y,
+                player.position.z
+            );
+
+            transform.position =
+                targetPos +
+                new Vector3(0, 0, ForwardOffSet) +
+                Vector3.up * HeightOffSet;
         }
         else if (Back)
         {
-            //Vector3 targetPos = player.position;
-            //targetPos.y = player.position.y + OffsetBack.y;
-            //targetPos.x = CameraPosition.position.x;
-            //targetPos.z = player.position.z + OffsetBack.z;
             transform.eulerAngles = new Vector3(originalX, BackRotation, originalZ);
-            //targetPos.x = 5.5f;
-            Vector3 targetPos = new Vector3 (CameraPosition.position.x, player.position.y, player.position.z);
-            transform.position = targetPos + new Vector3(0, 0, -ForwardOffSet) + Vector3.up * HeightOffSet; 
 
+            Vector3 targetPos = new Vector3(
+                CameraPosition.position.x,
+                player.position.y,
+                player.position.z
+            );
+
+            transform.position =
+                targetPos +
+                new Vector3(0, 0, -ForwardOffSet) +
+                Vector3.up * HeightOffSet;
         }
         else if (Left)
         {
             transform.eulerAngles = new Vector3(originalX, LeftRotation, originalZ);
-            //targetPos.x = 5.5f;
-            Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
-            transform.position = targetPos + new Vector3(-ForwardOffSet, 0, 0) + Vector3.up * HeightOffSet; 
+
+            Vector3 targetPos = new Vector3(
+                player.position.x,
+                player.position.y,
+                CameraPosition.position.z
+            );
+
+            transform.position =
+                targetPos +
+                new Vector3(-ForwardOffSet, 0, 0) +
+                Vector3.up * HeightOffSet;
         }
         else if (Right)
         {
             transform.eulerAngles = new Vector3(originalX, RightRotation, originalZ);
-            //targetPos.x = 5.5f;
-            Vector3 targetPos = new Vector3(player.position.x, player.position.y, CameraPosition.position.z);
-            transform.position = targetPos + new Vector3 (ForwardOffSet,0,0) + Vector3.up * HeightOffSet;
+
+            Vector3 targetPos = new Vector3(
+                player.position.x,
+                player.position.y,
+                CameraPosition.position.z
+            );
+
+            transform.position =
+                targetPos +
+                new Vector3(ForwardOffSet, 0, 0) +
+                Vector3.up * HeightOffSet;
         }
     }
 
@@ -95,13 +128,13 @@ public class CamaraMovement : MonoBehaviour
         }
         else if (Left)
         {
-            Back = true; 
+            Back = true;
             Left = false;
             RecordCamPosition();
         }
         else if (Back)
         {
-            Right = true; 
+            Right = true;
             Back = false;
             RecordCamPosition();
         }
@@ -115,9 +148,6 @@ public class CamaraMovement : MonoBehaviour
 
     public void RotatingRight()
     {
-        //Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
-        //transform.rotation = transform.rotation * RotateRight;
-        
         if (Front)
         {
             Right = true;
@@ -146,6 +176,9 @@ public class CamaraMovement : MonoBehaviour
 
     void RecordCamPosition()
     {
-        CameraPosition.position = player.position;
+        if (player != null)
+        {
+            CameraPosition.position = player.position;
+        }
     }
 }

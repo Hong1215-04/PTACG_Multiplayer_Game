@@ -1,75 +1,188 @@
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+using ExitGames.Client.Photon;
 
-public class DeadCollied : MonoBehaviour
+public class DeadCollied : MonoBehaviour, IOnEventCallback
 {
-    [SerializeField] Movement movement;
+    private Movement movement;
+
     [SerializeField] string EachDeadCollide;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
+    private string playerRole;
+
+    private bool isDeadOrWin = false;
+
+    private const byte DIE_EVENT = 10;
+    private const byte WIN_EVENT = 11;
+
     void Start()
     {
-        
+        movement = GetComponentInParent<Movement>();
+
+        object role;
+
+        if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue("PlayerRole", out role))
+        {
+            playerRole = role.ToString();
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
-        
+        PhotonNetwork.AddCallbackTarget(this);
+    }
+
+    void OnDisable()
+    {
+        PhotonNetwork.RemoveCallbackTarget(this);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
-        {
-            movement.Die();
-            Invoke("StopGame", 2);
-        }
-        else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
-        {
-            movement.Die();
-            Invoke("WinGame", 2);
-        }
+        CheckCollision(collision.gameObject.layer);
     }
-
 
     private void OnCollisionStay(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Dead"))
-        {
-            movement.Die();
-            Invoke("StopGame", 2);
-        }
-        else if (collision.gameObject.layer == LayerMask.NameToLayer("Win"))
-        {
-            movement.Die();
-            Invoke("WinGame", 2);
-        }
+        CheckCollision(collision.gameObject.layer);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
-        {
-            movement.Die();
-            Invoke("StopGame", 2);
-        }
+        CheckCollision(other.gameObject.layer);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(EachDeadCollide))
+        CheckCollision(other.gameObject.layer);
+    }
+
+    void CheckCollision(int layer)
+    {
+        if (isDeadOrWin)
+            return;
+
+        // Everyone dies
+        if (layer == LayerMask.NameToLayer("Dead"))
         {
-            movement.Die();
-            Invoke("StopGame", 2);
+            Die();
+        }
+
+        // Only P1 dies
+        else if (layer == LayerMask.NameToLayer("Dead_P1"))
+        {
+            if (playerRole == "P1")
+            {
+                Die();
+            }
+        }
+
+        // Only P2 dies
+        else if (layer == LayerMask.NameToLayer("Dead_P2"))
+        {
+            if (playerRole == "P2")
+            {
+                Die();
+            }
+        }
+
+        // Win
+        else if (layer == LayerMask.NameToLayer("Win"))
+        {
+            Win();
+        }
+
+        // Extra trigger layer support
+        else if (layer == LayerMask.NameToLayer(EachDeadCollide))
+        {
+            Die();
         }
     }
 
-    void StopGame() 
+    void Die()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
+        if (isDeadOrWin)
+            return;
+
+        RaiseEventOptions options = new RaiseEventOptions
+        {
+            Receivers = ReceiverGroup.All
+        };
+
+        PhotonNetwork.RaiseEvent(
+            DIE_EVENT,
+            null,
+            options,
+            SendOptions.SendReliable
+        );
     }
 
-    void WinGame()
+    void Win()
     {
-        UnityEditor.EditorApplication.isPlaying = false;
+        if (isDeadOrWin)
+            return;
+
+        RaiseEventOptions options = new RaiseEventOptions
+        {
+            Receivers = ReceiverGroup.All
+        };
+
+        PhotonNetwork.RaiseEvent(
+            WIN_EVENT,
+            null,
+            options,
+            SendOptions.SendReliable
+        );
+    }
+
+    public void OnEvent(EventData photonEvent)
+    {
+        if (photonEvent.Code == DIE_EVENT)
+        {
+            AllPlayersDie();
+        }
+        else if (photonEvent.Code == WIN_EVENT)
+        {
+            AllPlayersWin();
+        }
+    }
+
+    void AllPlayersDie()
+    {
+        if (isDeadOrWin)
+            return;
+
+        isDeadOrWin = true;
+
+        Debug.Log(playerRole + " Dead!");
+
+        movement.Die();
+
+        Invoke(nameof(ShowDeathUI), 1f);
+    }
+
+    void AllPlayersWin()
+    {
+        if (isDeadOrWin)
+            return;
+
+        isDeadOrWin = true;
+
+        Debug.Log(playerRole + " Win!");
+
+        movement.Die();
+
+        Invoke(nameof(ShowWinUI), 1f);
+    }
+
+    void ShowDeathUI()
+    {
+        GameOverVoteManager.Instance.ShowDeathVote();
+    }
+
+    void ShowWinUI()
+    {
+        GameOverVoteManager.Instance.ShowLevelCompleteVote();
     }
 }
