@@ -18,6 +18,8 @@ public class Movement : MonoBehaviourPun
 
     public string MoveHori;
 
+    Vector3 networkPosition;
+
     public CamaraMovement cameraMovement;
     public GameObject Camera;
 
@@ -39,10 +41,19 @@ public class Movement : MonoBehaviourPun
     {
         if (!alive) return;
         // forwardMove & horizontalmove is just variable (name) not function
-
-        Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
-        Vector3 horizontalMove = transform.right * horizontalInput * HoriSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(rb.position + forwardMove + horizontalMove);
+        if (photonView.IsMine)
+        {
+            Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
+            Vector3 horizontalMove = transform.right * horizontalInput * HoriSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(rb.position + forwardMove + horizontalMove);
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, networkPosition, Time.deltaTime * 10f);
+        }
+        //Vector3 forwardMove = transform.forward * Speed * Time.fixedDeltaTime;
+        //Vector3 horizontalMove = transform.right * horizontalInput * HoriSpeed * Time.fixedDeltaTime;
+        //rb.MovePosition(rb.position + forwardMove + horizontalMove);
     }
 
     // Update is called once per frame
@@ -50,42 +61,81 @@ public class Movement : MonoBehaviourPun
     {
         if (!alive) return;
 
-        horizontalInput = Input.GetAxis(MoveHori);
+        if (photonView.IsMine)
+        {
+            horizontalInput = Input.GetAxis(MoveHori);
 
-        float height = GetComponent<Collider>().bounds.size.y;
-        bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.6f, groundMask);
+            float height = GetComponent<Collider>().bounds.size.y;
+            bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.6f, groundMask);
+
+
+            if (isGrounded)
+            {
+                Debug.Log("Ground");
+                if (Input.GetKeyDown(KeyJump))
+                {
+                    Debug.Log("JUMPress");
+                    Jump();
+                }
+            }
+
+            if (Input.GetKeyDown(KeyCode.S))
+            {
+                //play anim (slide)
+            }
+            if (CAN_Turn == true)
+            {
+                if (Input.GetKeyDown(RotateLeft))
+                {
+                    StartCoroutine(TurnLeft());
+                    cameraMovement.RotatingLeft();
+                    CAN_Turn = false;
+                }
+                else if (Input.GetKeyDown(RotateRight))
+                {
+                    StartCoroutine(TurnRight());
+                    cameraMovement.RotatingRight();
+                    CAN_Turn = false;
+                }
+            }
+
+        }
+
+        //horizontalInput = Input.GetAxis(MoveHori);
+
+        //float height = GetComponent<Collider>().bounds.size.y;
+        //bool isGrounded = Physics.Raycast(transform.position, Vector3.down, (height / 2) + 0.6f, groundMask);
  
 
-        if (isGrounded)
-        {
-            Debug.Log("Ground");
-            if (Input.GetKeyDown(KeyJump))
-            {
-                Debug.Log("JUMPress");
-                Jump();
-            }
-        }
+        //if (isGrounded)
+        //{
+        //    Debug.Log("Ground");
+        //    if (Input.GetKeyDown(KeyJump))
+        //    {
+        //        Debug.Log("JUMPress");
+        //        Jump();
+        //    }
+        //}
       
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            //play anim (slide)
-        }
-        if (CAN_Turn == true)
-        {
-            if (Input.GetKeyDown(RotateLeft))
-            {
-                StartCoroutine(TurnLeft());
-                cameraMovement.RotatingLeft();
-                CAN_Turn = false;
-            }
-            else if (Input.GetKeyDown(RotateRight))
-            {
-                StartCoroutine(TurnRight());
-                cameraMovement.RotatingRight();
-                CAN_Turn = false;
-            }
-        }
-
+        //if (Input.GetKeyDown(KeyCode.S))
+        //{
+        //    //play anim (slide)
+        //}
+        //if (CAN_Turn == true)
+        //{
+        //    if (Input.GetKeyDown(RotateLeft))
+        //    {
+        //        StartCoroutine(TurnLeft());
+        //        cameraMovement.RotatingLeft();
+        //        CAN_Turn = false;
+        //    }
+        //    else if (Input.GetKeyDown(RotateRight))
+        //    {
+        //        StartCoroutine(TurnRight());
+        //        cameraMovement.RotatingRight();
+        //        CAN_Turn = false;
+        //    }
+        //}
     }
 
     IEnumerator TurnRight()
@@ -114,6 +164,20 @@ public class Movement : MonoBehaviourPun
     public void Die()
     {
         alive = false;
+    }
+
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        // Send data
+        if (stream.IsWriting)
+        {
+            stream.SendNext(transform.position);
+        }
+        // Receive data
+        else
+        {
+            networkPosition = (Vector3)stream.ReceiveNext();
+        }
     }
 
     //public CamaraMovement ReturnCamMove()
