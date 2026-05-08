@@ -47,6 +47,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSetup
   playerCamera: {fileID: 4378294709625587829, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
+  SwapKey: 103
+  Cooldown: 3
+  swap: 0
 --- !u!1001 &7098930755620774359
 PrefabInstance:
   m_ObjectHideFlags: 0

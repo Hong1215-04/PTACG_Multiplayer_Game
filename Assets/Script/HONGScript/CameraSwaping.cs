@@ -30,38 +30,38 @@ public class CameraSwaping : MonoBehaviour
             canDo = true;
         }
 
-        if (Input.GetKeyDown(SwapKey))
-        {
-            if (canDo) 
-            {
-                //CamaraMovement[] AllCamera = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
+        //if (Input.GetKeyDown(SwapKey))
+        //{
+        //    if (canDo) 
+        //    {
+        //        //CamaraMovement[] AllCamera = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
 
-                //CamaraMovement othercamera = null;
+        //        //CamaraMovement othercamera = null;
 
-                //foreach (CamaraMovement c in AllCamera)
-                //{
-                //    if (c.gameObject != this)
-                //    {
-                //        othercamera = c;
-                //        break;
-                //    }
-                //}
+        //        //foreach (CamaraMovement c in AllCamera)
+        //        //{
+        //        //    if (c.gameObject != this)
+        //        //    {
+        //        //        othercamera = c;
+        //        //        break;
+        //        //    }
+        //        //}
 
-                //if (othercamera == null) return;
+        //        //if (othercamera == null) return;
 
-                CamMove = this.GetComponentInParent<CamaraMovement>();
-                Camera2Move = Camera2.GetComponent<CamaraMovement>();
+        //        CamMove = this.GetComponentInParent<CamaraMovement>();
+        //        Camera2Move = Camera2.GetComponent<CamaraMovement>();
 
-                Vector3 thisCameraPos = CamMove.CameraPosition.position;
-                CamMove.CameraPosition.position = Camera2Move.CameraPosition.position;
-                Camera2Move.CameraPosition.position = thisCameraPos;
+        //        Vector3 thisCameraPos = CamMove.CameraPosition.position;
+        //        CamMove.CameraPosition.position = Camera2Move.CameraPosition.position;
+        //        Camera2Move.CameraPosition.position = thisCameraPos;
 
-                ChangeRotationBool();
+        //        ChangeRotationBool();
 
-                canDo = false;
-                time = 0f;
-            }
-        }
+        //        canDo = false;
+        //        time = 0f;
+        //    }
+        //}
     }
 
     public void ChangeRotationBool()
