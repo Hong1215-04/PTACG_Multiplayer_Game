@@ -18,6 +18,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             GetComponentInChildren<Movement>().enabled = true;
             
             playerCamera1.GetComponent<Camera>().enabled = true;
+            Debug.Log("MineSet");
         }
         else
         {

@@ -1,6 +1,7 @@
 using UnityEngine;
+using Photon.Pun;
 
-public class CamaraMovement : MonoBehaviour
+public class CamaraMovement : MonoBehaviourPun
 {
     public Transform CameraPosition;
 
