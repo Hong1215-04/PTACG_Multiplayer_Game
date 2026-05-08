@@ -364,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1178600934588765063}
   - component: {fileID: 728620092012301489}
+  - component: {fileID: 8648575646896148524}
   m_Layer: 10
   m_Name: Player1_Object
   m_TagString: Untagged
@@ -401,3 +402,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSetup
   playerCamera1: {fileID: 0}
   playerCamera2: {fileID: 0}
+--- !u!114 &8648575646896148524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8781734852685728468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0547c7c2e4aee34b93ed6337d7a187e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerVisual
+  playerRenderer: {fileID: 9084806475918078976}
+  p1Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  p2Color: {r: 1, g: 0, b: 0, a: 1}
