@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
-    public GameObject playerCamera1;
-    public GameObject playerCamera2;
+    public GameObject playerCamera;
+    //public GameObject playerCamera2;
 
     //private Movement movement;
 
@@ -16,15 +16,16 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         if (pv.IsMine)
         {
             GetComponentInChildren<Movement>().enabled = true;
-            
-            playerCamera1.GetComponent<Camera>().enabled = true;
+
+            if (playerCamera != null)
+                playerCamera.GetComponent<Camera>().enabled = true;
         }
         else
         {
             GetComponentInChildren<Movement>().enabled = false;
-            playerCamera2.GetComponent<Camera>().enabled = false;
-            //if (playerCamera != null)
-                //playerCamera.GetComponent<Camera>().enabled = false;
+
+            if (playerCamera != null)
+                playerCamera.GetComponent<Camera>().enabled = false;
         }
     }
 }
