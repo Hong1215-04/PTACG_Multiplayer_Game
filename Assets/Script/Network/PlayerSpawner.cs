@@ -22,7 +22,6 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     //[SerializeField] Movement MoveP2;
 
     public GameObject P1;
-    public GameObject P2;
     public GameObject P1Pos;
     public GameObject P2Pos;
     //public GameObject P1Cam;
@@ -61,7 +60,6 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
                 //CamSpawnPoint = p1CamSpawnPoint;
                 P1 = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
                 P1.GetComponentInChildren<Camera>().enabled = true;
-                CamMove = P1.GetComponentInChildren<CamaraMovement>();
                 //P1Pos = P1.transform.Find("Character_Test").gameObject;
                 //StartCoroutine(FindOtherPlayerWhenReady());
                 //PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
@@ -74,13 +72,14 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
                 //CamSpawnPoint = p2CamSpawnPoint;
                 P1 = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
                 P1.GetComponentInChildren<Camera>().enabled = true;
-                CamMove = P1.GetComponentInChildren<CamaraMovement>();
                 //P1Pos = P1.transform.Find("Character_Test").gameObject;
                 //StartCoroutine(FindOtherPlayerWhenReady());
                 //PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
             }
 
             P1Pos = P1.transform.GetChild(1).gameObject;
+            CamMove = P1.GetComponentInChildren<CamaraMovement>();
+
             //P2Pos = P2.transform.Find("Character_Test").gameObject;
 
             //Camera2Move = P2.GetComponentInChildren<CamaraMovement>();
@@ -132,12 +131,12 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         {
             if (pv.Owner != PhotonNetwork.LocalPlayer)
             {
-                P2 = pv.gameObject;
+                P2Pos = pv.gameObject;
                 break;
             }
         }
 
-        P2Pos = P2.transform.GetChild(1).gameObject;
+        Camera2Move = P2Pos.GetComponentInParent<CamaraMovement>();
 
         if (!canDo)
         {
