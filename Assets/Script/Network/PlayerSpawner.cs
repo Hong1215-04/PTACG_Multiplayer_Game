@@ -8,8 +8,8 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 {
     public Transform p1SpawnPoint;
     public Transform p2SpawnPoint;
-    public Transform p1CamSpawnPoint;
-    public Transform p2CamSpawnPoint;
+    //public Transform p1CamSpawnPoint;
+    //public Transform p2CamSpawnPoint;
     //[SerializeField] GameObject CameraP1;
     //[SerializeField] GameObject CameraP2;
     //[SerializeField] GameObject Player1;
@@ -40,12 +40,12 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             string playerRole = role.ToString();
 
             Transform spawnPoint = null;
-            Transform CamSpawnPoint = null;
+            //Transform CamSpawnPoint = null;
 
             if (playerRole == "P1")
             {
                 spawnPoint = p1SpawnPoint;
-                CamSpawnPoint = p1CamSpawnPoint;
+                //CamSpawnPoint = p1CamSpawnPoint;
                 PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
                 //PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
 
@@ -54,7 +54,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             else if (playerRole == "P2")
             {
                 spawnPoint = p2SpawnPoint;
-                CamSpawnPoint = p2CamSpawnPoint;
+                //CamSpawnPoint = p2CamSpawnPoint;
                 PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
                 //PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
             }
