@@ -10,6 +10,8 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        playerCamera1.GetComponent<Camera>().enabled = true;
+        playerCamera2.GetComponent<Camera>().enabled = true;
         // 从子物体找 PhotonView
         PhotonView pv = GetComponentInChildren<PhotonView>();
         
