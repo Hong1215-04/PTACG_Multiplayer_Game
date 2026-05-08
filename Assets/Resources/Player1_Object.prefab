@@ -111,8 +111,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'Character_Test '
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2826589463891930816, guid: 45d3c23e6fbedd8408a1b5dfbf6f36fd, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

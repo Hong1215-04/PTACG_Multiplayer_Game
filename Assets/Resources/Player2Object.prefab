@@ -111,8 +111,7 @@ PrefabInstance:
       propertyPath: Player2
       value: 
       objectReference: {fileID: 8781734852685728468, guid: fb48719594018044da59dff188b9fcc4, type: 3}
-    m_RemovedComponents:
-    - {fileID: 6355532641948279964, guid: 662228745193e0048ad723022ef495a9, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
