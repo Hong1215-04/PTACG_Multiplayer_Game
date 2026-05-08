@@ -93,46 +93,46 @@ public class PlayerSwaping : MonoBehaviourPun
             }
         }
 
-        // 只有本地玩家才能触发交换
-        if (!photonView.IsMine) return;
-
         if (Input.GetKeyDown(SwapKey) && canDo)
-        {
-            // 找到对方的 PhotonView
-            foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
             {
-                if (pv != photonView && pv.GetComponent<PlayerSwaping>() != null)
+                foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
                 {
-                    // 把双方当前位置和旋转发给所有客户端执行
-                    photonView.RPC("RPC_Swap", RpcTarget.All,
-                        transform.position,
-                        transform.rotation,
-                        pv.transform.position,
-                        pv.transform.rotation
-                    );
+                    // 找到对方玩家的 PhotonView
+                    if (pv != photonView && pv.GetComponent<PlayerSwaping>() != null)
+                    {
+                        Vector3 myPos = transform.position;
+                        Quaternion myRot = transform.rotation;
+                        Vector3 otherPos = pv.transform.position;
+                        Quaternion otherRot = pv.transform.rotation;
 
-                    canDo = false;
-                    time = 0f;
-                    break;
+                        // 通知自己的脚本移动到对方位置
+                        photonView.RPC("RPC_MoveToPos", RpcTarget.All, otherPos, otherRot);
+
+                        // 通知对方的脚本移动到我的位置
+                        pv.RPC("RPC_MoveToPos", RpcTarget.All, myPos, myRot);
+
+                        canDo = false;
+                        time = 0f;
+                        break;
+                    }
                 }
             }
-        }
     }
 
     [PunRPC]
-    void RPC_Swap(Vector3 myPos, Quaternion myRot, Vector3 otherPos, Quaternion otherRot)
+    void RPC_Swap(Vector3 p1Pos, Quaternion p1Rot, Vector3 p2Pos, Quaternion p2Rot)
     {
-        // 本地玩家移动到对方位置
+        // 发起交换的人（P1）移到 P2 的位置
+        // 收到交换的人（P2）移到 P1 的位置
         if (photonView.IsMine)
         {
-            transform.position = otherPos;
-            transform.rotation = otherRot;
+            transform.position = p2Pos;
+            transform.rotation = p2Rot;
         }
-        // 远程玩家移动到本地玩家原来的位置
         else
         {
-            transform.position = myPos;
-            transform.rotation = myRot;
+            transform.position = p1Pos;
+            transform.rotation = p1Rot;
         }
     }
 }
