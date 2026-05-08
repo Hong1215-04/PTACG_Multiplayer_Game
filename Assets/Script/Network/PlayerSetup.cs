@@ -4,6 +4,7 @@ using UnityEngine;
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
     public GameObject playerCamera;
+    public PlayerRow playerRow;
     //public GameObject playerCamera2;
 
     //private Movement movement;
@@ -20,12 +21,12 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             if (playerCamera != null)
                 playerCamera.GetComponent<Camera>().enabled = true;
         }
-        else
-        {
-            GetComponentInChildren<Movement>().enabled = false;
+        // else
+        // {
+        //     GetComponentInChildren<Movement>().enabled = false;
 
-            if (playerCamera != null)
-                playerCamera.GetComponent<Camera>().enabled = false;
-        }
+        //     if (playerCamera != null)
+        //         playerCamera.GetComponent<Camera>().enabled = false;
+        // }
     }
 }
