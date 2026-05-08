@@ -41,56 +41,56 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         }
     }
 
-    void Swapping()
-    {
-        if (!swap)
-        {
-            if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
-            {
-                Debug.Log("Swap");
-                playerCamera.GetComponent<Camera>().enabled = false;
-                swap = true;
-            }
-            else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
-            {
-                playerCamera.GetComponent<Camera>().enabled = true;
-                swap = true;
-            }
-        }
-        else if (swap)
-        {
-            if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
-            {
-                playerCamera.GetComponent<Camera>().enabled = true;
-                swap = false;
-            }
-            else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
-            {
-                playerCamera.GetComponent<Camera>().enabled = false;
-                swap = false;
-            }
-        }
-    }
+    //void Swapping()
+    //{
+    //    if (!swap)
+    //    {
+    //        if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
+    //        {
+    //            Debug.Log("Swap");
+    //            playerCamera.GetComponent<Camera>().enabled = false;
+    //            swap = true;
+    //        }
+    //        else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
+    //        {
+    //            playerCamera.GetComponent<Camera>().enabled = true;
+    //            swap = true;
+    //        }
+    //    }
+    //    else if (swap)
+    //    {
+    //        if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
+    //        {
+    //            playerCamera.GetComponent<Camera>().enabled = true;
+    //            swap = false;
+    //        }
+    //        else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
+    //        {
+    //            playerCamera.GetComponent<Camera>().enabled = false;
+    //            swap = false;
+    //        }
+    //    }
+    //}
 
-    private void Update()
-    {
-        if (!canDo)
-        {
-            time += Time.deltaTime;
-        }
+    //private void Update()
+    //{
+    //    if (!canDo)
+    //    {
+    //        time += Time.deltaTime;
+    //    }
 
-        if (time > Cooldown)
-        {
-            canDo = true;
-        }
-        if (Input.GetKeyDown(SwapKey))
-        {
-            if (canDo)
-            {
-                Swapping();
-                canDo = false;
-                time = 0f;
-            }
-        }
-    }
+    //    if (time > Cooldown)
+    //    {
+    //        canDo = true;
+    //    }
+    //    if (Input.GetKeyDown(SwapKey))
+    //    {
+    //        if (canDo)
+    //        {
+    //            Swapping();
+    //            canDo = false;
+    //            time = 0f;
+    //        }
+    //    }
+    //}
 }

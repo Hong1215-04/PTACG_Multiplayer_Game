@@ -118,6 +118,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: 'Character_Test '
       objectReference: {fileID: 0}
+    - target: {fileID: 8238069243635203406, guid: 45d3c23e6fbedd8408a1b5dfbf6f36fd, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -62,6 +62,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
                 P1 = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
                 P1.GetComponentInChildren<Camera>().enabled = true;
                 CamMove = P1.GetComponentInChildren<CamaraMovement>();
+                //P1Pos = P1.transform.Find("Character_Test").gameObject;
                 StartCoroutine(FindOtherPlayerWhenReady());
                 //PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
 
@@ -74,14 +75,15 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
                 P1 = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
                 P1.GetComponentInChildren<Camera>().enabled = true;
                 CamMove = P1.GetComponentInChildren<CamaraMovement>();
+                //P1Pos = P1.transform.Find("Character_Test").gameObject;
                 StartCoroutine(FindOtherPlayerWhenReady());
                 //PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
             }
 
-            P1Pos = P1.transform.Find("Character_Test").gameObject;
-            P2Pos = P2.transform.Find("Character_Test").gameObject;
+            P1Pos = P1.transform.GetChild(1).gameObject;
+            //P2Pos = P2.transform.Find("Character_Test").gameObject;
 
-            Camera2Move = P2.GetComponentInChildren<CamaraMovement>();
+            //Camera2Move = P2.GetComponentInChildren<CamaraMovement>();
             //PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
             //PlayerSetup CamSetupP2 = P2.GetComponent<PlayerSetup>();
 
@@ -222,10 +224,8 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(0.2f);
 
             P2 = otherplayer;
-            P2Pos = P2.transform.Find("Character_Test").gameObject;
+            P2Pos = P2.transform.GetChild(1).gameObject;
             Camera2Move = P2.GetComponentInChildren<CamaraMovement>();
-
-            P1Pos = P1.transform.Find("Character_Test").gameObject;
         }
     }
 
