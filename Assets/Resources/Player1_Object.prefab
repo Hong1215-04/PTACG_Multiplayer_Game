@@ -399,4 +399,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9e9be9d1f03e745858b846c0708989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSetup
-  playerCamera: {fileID: 0}
+  playerCamera1: {fileID: 0}
+  playerCamera2: {fileID: 0}

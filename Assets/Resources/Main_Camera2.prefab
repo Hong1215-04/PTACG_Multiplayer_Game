@@ -14,10 +14,10 @@ GameObject:
   - component: {fileID: 5221761950656812420}
   - component: {fileID: 182201598856108080}
   - component: {fileID: 8804937757455394314}
-  - component: {fileID: 3525847032536677691}
-  - component: {fileID: -2339644370493869197}
+  - component: {fileID: -1944924502192202364}
+  - component: {fileID: -8056346348178946468}
   m_Layer: 0
-  m_Name: Main_Camera
+  m_Name: Main_Camera2
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -177,7 +177,7 @@ MonoBehaviour:
   SwapKey: 103
   Cooldown: 3
   Camera2: {fileID: 0}
---- !u!114 &3525847032536677691
+--- !u!114 &-1944924502192202364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,7 +199,7 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
---- !u!114 &-2339644370493869197
+--- !u!114 &-8056346348178946468
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
