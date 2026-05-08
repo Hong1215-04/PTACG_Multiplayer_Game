@@ -63,7 +63,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
                 P1.GetComponentInChildren<Camera>().enabled = true;
                 CamMove = P1.GetComponentInChildren<CamaraMovement>();
                 //P1Pos = P1.transform.Find("Character_Test").gameObject;
-                StartCoroutine(FindOtherPlayerWhenReady());
+                //StartCoroutine(FindOtherPlayerWhenReady());
                 //PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
 
             }
@@ -76,7 +76,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
                 P1.GetComponentInChildren<Camera>().enabled = true;
                 CamMove = P1.GetComponentInChildren<CamaraMovement>();
                 //P1Pos = P1.transform.Find("Character_Test").gameObject;
-                StartCoroutine(FindOtherPlayerWhenReady());
+                //StartCoroutine(FindOtherPlayerWhenReady());
                 //PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
             }
 
@@ -126,6 +126,39 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             //}
         }
     }
+    private void Update()
+    {
+        foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
+        {
+            if (pv.Owner != PhotonNetwork.LocalPlayer)
+            {
+                P2 = pv.gameObject;
+                break;
+            }
+        }
+
+        P2Pos = P2.transform.GetChild(1).gameObject;
+
+        if (!canDo)
+        {
+            time += Time.deltaTime;
+        }
+
+        if (time > Cooldown)
+        {
+            canDo = true;
+        }
+        if (Input.GetKeyDown(SwapKey))
+        {
+            if (canDo)
+            {
+                Swapping();
+                ChangeRotationBool();
+                canDo = false;
+                time = 0f;
+            }
+        }
+    }
 
     void Swapping()
     {
@@ -165,29 +198,6 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         //}
     }
 
-    private void Update()
-    {
-        if (!canDo)
-        {
-            time += Time.deltaTime;
-        }
-
-        if (time > Cooldown)
-        {
-            canDo = true;
-        }
-        if (Input.GetKeyDown(SwapKey))
-        {
-            if (canDo)
-            {
-                Swapping();
-                ChangeRotationBool();
-                canDo = false;
-                time = 0f;
-            }
-        }
-    }
-
     public void ChangeRotationBool()
     {
         bool nowFront = CamMove.Front;
@@ -207,27 +217,27 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         Camera2Move.Back = nowBack;
     }
 
-    IEnumerator FindOtherPlayerWhenReady()
-    {
-        GameObject otherplayer = null;
+    //IEnumerator FindOtherPlayerWhenReady()
+    //{
+    //    GameObject otherplayer = null;
 
-        while (otherplayer == null)
-        {
-            foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
-            {
-                if (pv.Owner != PhotonNetwork.LocalPlayer)
-                {
-                    otherplayer = pv.gameObject;
-                    break;
-                }
-            }
-            yield return new WaitForSeconds(0.2f);
+    //    while (otherplayer == null)
+    //    {
+    //        foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
+    //        {
+    //            if (pv.Owner != PhotonNetwork.LocalPlayer)
+    //            {
+    //                otherplayer = pv.gameObject;
+    //                break;
+    //            }
+    //        }
+    //        yield return new WaitForSeconds(0.2f);
 
-            P2 = otherplayer;
-            P2Pos = P2.transform.GetChild(1).gameObject;
-            Camera2Move = P2.GetComponentInChildren<CamaraMovement>();
-        }
-    }
+    //        P2 = otherplayer;
+    //        P2Pos = P2.transform.GetChild(1).gameObject;
+    //        Camera2Move = P2.GetComponentInChildren<CamaraMovement>();
+    //    }
+    //}
 
 
 
