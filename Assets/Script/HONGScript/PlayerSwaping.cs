@@ -6,6 +6,7 @@ public class PlayerSwaping : MonoBehaviour
     [SerializeField] float Cooldown;
     public GameObject Player2;
 
+    private Movement Player2Move;
     bool canDo;
     private float time;
 
@@ -17,6 +18,7 @@ public class PlayerSwaping : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Player2Move = Player2.GetComponentInChildren<Movement>();
         canDo = true;
     }
 
@@ -38,12 +40,12 @@ public class PlayerSwaping : MonoBehaviour
             if (canDo)
             {
                 Vector3 thisPlayerPos = transform.position;
-                transform.position = Player2.transform.position;
-                Player2.transform.position = thisPlayerPos;
+                transform.position = Player2Move.transform.position;
+                Player2Move.transform.position = thisPlayerPos;
 
                 Quaternion thisPlayerRot = transform.rotation;
-                transform.rotation = Player2.transform.rotation;
-                Player2.transform.rotation = thisPlayerRot;
+                transform.rotation = Player2Move.transform.rotation;
+                Player2Move.transform.rotation = thisPlayerRot;
 
                 canDo = false;
                 time = 0f;

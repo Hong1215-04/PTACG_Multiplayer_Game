@@ -1,8 +1,10 @@
 using Photon.Pun;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
+    //public GameObject PlayerMesh;
     [SerializeField] GameObject playerCamera;
 
     //private Movement movement;
@@ -29,5 +31,10 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
                 }
             }  
         }
+    }
+
+    void Swapping(Transform Anotherplayer)
+    {
+        
     }
 }
