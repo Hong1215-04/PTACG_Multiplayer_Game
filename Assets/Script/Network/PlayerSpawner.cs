@@ -44,6 +44,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
             if (playerRole == "P1")
             {
+                debug.Log("Spawning Player 1");
                 spawnPoint = p1SpawnPoint;
                 CamSpawnPoint = p1CamSpawnPoint;
                 PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
@@ -53,6 +54,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
             else if (playerRole == "P2")
             {
+                debug.Log("Spawning Player 2");
                 spawnPoint = p2SpawnPoint;
                 CamSpawnPoint = p2CamSpawnPoint;
                 PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
