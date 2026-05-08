@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamaraMovement
   CameraPosition: {fileID: 5004742709550554247}
+  player: {fileID: 229653241999844957, guid: 13d119c94c9632d44aafcc315e5947e0, type: 3}
   FrontRotation: 180
   LeftRotation: 90
   RightRotation: 270

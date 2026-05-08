@@ -4,7 +4,7 @@ public class CamaraMovement : MonoBehaviour
 {
     public Transform CameraPosition;
 
-    private Transform player;
+    public Transform player;
 
     [SerializeField] float FrontRotation;
     [SerializeField] float LeftRotation;
