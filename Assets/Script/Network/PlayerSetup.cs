@@ -55,7 +55,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
                 swap = true;
             }
         }
-        if (swap)
+        else if (swap)
         {
             if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
             {
