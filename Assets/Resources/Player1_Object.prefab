@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1178600934588765063}
+  - component: {fileID: 8602158443825052361}
   m_Layer: 10
   m_Name: Player1_Object
   m_TagString: Untagged
@@ -33,6 +34,20 @@ Transform:
   - {fileID: 419305548843710505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8602158443825052361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8781734852685728468}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c9e9be9d1f03e745858b846c0708989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSetup
+  playerCamera: {fileID: 4378294709625587829, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
+  playerCamera2: {fileID: 4378294709625587829, guid: 1030003383816ad489325f186493b3d2, type: 3}
 --- !u!1001 &7098930755620774359
 PrefabInstance:
   m_ObjectHideFlags: 0
