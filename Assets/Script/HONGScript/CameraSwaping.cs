@@ -52,9 +52,9 @@ public class CameraSwaping : MonoBehaviour
                 CamMove = this.GetComponentInParent<CamaraMovement>();
                 Camera2Move = Camera2.GetComponent<CamaraMovement>();
 
-                Vector3 thisCameraPos = CamMove.CameraPosition.position;
-                CamMove.CameraPosition.position = Camera2Move.CameraPosition.position;
-                Camera2Move.CameraPosition.position = thisCameraPos;
+                //Vector3 thisCameraPos = CamMove.CameraPosition.position;
+                //CamMove.CameraPosition.position = Camera2Move.CameraPosition.position;
+                //Camera2Move.CameraPosition.position = thisCameraPos;
 
                 ChangeRotationBool();
 
