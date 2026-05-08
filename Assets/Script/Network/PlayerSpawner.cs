@@ -1,9 +1,10 @@
 using JetBrains.Annotations;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections;
 using UnityEngine;
 
-public class PlayerSpawner : MonoBehaviour
+public class PlayerSpawner : MonoBehaviourPunCallbacks
 {
     public Transform p1SpawnPoint;
     public Transform p2SpawnPoint;
@@ -53,9 +54,11 @@ public class PlayerSpawner : MonoBehaviour
             {
                 spawnPoint = p2SpawnPoint;
                 CamSpawnPoint = p2CamSpawnPoint;
-                P2 = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
-                P2Cam = PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
+                P1 = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
+                P1Cam = PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
             }
+
+            StartCoroutine(FindOtherPlayerWhenReady());
 
             PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
             PlayerSetup CamSetupP2 = P2.GetComponent<PlayerSetup>();
@@ -72,22 +75,22 @@ public class PlayerSpawner : MonoBehaviour
             Movement P1Movement = P1.GetComponent<Movement>();
             Movement P2Movement = P2.GetComponent<Movement>();
 
-            CamSetupP1.playerCamera1 = P1Cam;
-            CamSetupP2.playerCamera1 = P2Cam;
-            CamSetupP1.playerCamera2 = P2Cam;
-            CamSetupP2.playerCamera2 = P1Cam;
+            //CamSetupP1.playerCamera1 = P1Cam;
+            //CamSetupP2.playerCamera1 = P2Cam;
+            //CamSetupP1.playerCamera2 = P2Cam;
+            //CamSetupP2.playerCamera2 = P1Cam;
 
-            P1Movement.cameraMovement = P1CamMove;
-            P2Movement.cameraMovement = P2CamMove;
+            //P1Movement.cameraMovement = P1CamMove;
+            //P2Movement.cameraMovement = P2CamMove;
 
-            P1Movement.Camera = P1Cam;
-            P2Movement.Camera = P2Cam;
+            //P1Movement.Camera = P1Cam;
+            //P2Movement.Camera = P2Cam;
 
             P1Swap.Player2 = P2;
-            P2Swap.Player2 = P1;
+            //P2Swap.Player2 = P1;
 
             P1CamSwap.Camera2 = P2Cam;
-            P2CamSwap.Camera2 = P1Cam;
+            //P2CamSwap.Camera2 = P1Cam;
 
             //if (spawnPoint != null)
             //{
@@ -97,6 +100,36 @@ public class PlayerSpawner : MonoBehaviour
             //        spawnPoint.rotation
             //    );
             //}
+        }
+    }
+
+    IEnumerator FindOtherPlayerWhenReady()
+    {
+        GameObject otherplayer = null;
+        GameObject othercamera = null;
+
+        while (otherplayer == null || othercamera == null)
+        {
+            foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
+            {
+                if (pv.Owner != PhotonNetwork.LocalPlayer)
+                {
+                    if (pv.CompareTag("Player"))
+                    {
+                        otherplayer = pv.gameObject;
+                        break;
+                    }
+                    if (pv.CompareTag("MainCamera"))
+                    {
+                        othercamera = pv.gameObject;
+                        break;
+                    }
+                }
+            }
+            yield return new WaitForSeconds(0.2f);
+
+            P2 = otherplayer;
+            P2Cam = othercamera;
         }
     }
 }
