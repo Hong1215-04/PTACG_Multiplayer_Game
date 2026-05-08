@@ -6,7 +6,7 @@ public class CameraSwaping : MonoBehaviour
     private CamaraMovement CamMove;
     private CamaraMovement Camera2Move;
     [SerializeField] float Cooldown;
-    [SerializeField] GameObject Camera2;
+    public GameObject Camera2;
 
     bool canDo;
     private float time; 

@@ -7,14 +7,21 @@ public class PlayerSpawner : MonoBehaviour
 {
     public Transform p1SpawnPoint;
     public Transform p2SpawnPoint;
-    [SerializeField] GameObject CameraP1;
-    [SerializeField] GameObject CameraP2;
-    [SerializeField] GameObject Player1;
-    [SerializeField] GameObject Player2;
-    [SerializeField] CamaraMovement CamMoveP1;
-    [SerializeField] CamaraMovement CamMoveP2;
-    [SerializeField] Movement MoveP1;
-    [SerializeField] Movement MoveP2;
+    public Transform p1CamSpawnPoint;
+    public Transform p2CamSpawnPoint;
+    //[SerializeField] GameObject CameraP1;
+    //[SerializeField] GameObject CameraP2;
+    //[SerializeField] GameObject Player1;
+    //[SerializeField] GameObject Player2;
+    //[SerializeField] CamaraMovement CamMoveP1;
+    //[SerializeField] CamaraMovement CamMoveP2;
+    //[SerializeField] Movement MoveP1;
+    //[SerializeField] Movement MoveP2;
+
+    public GameObject P1;
+    public GameObject P2;
+    public GameObject P1Cam;
+    public GameObject P2Cam;
 
     public static PlayerSpawner Instance;
 
@@ -32,39 +39,57 @@ public class PlayerSpawner : MonoBehaviour
             string playerRole = role.ToString();
 
             Transform spawnPoint = null;
+            Transform CamSpawnPoint = null;
 
             if (playerRole == "P1")
             {
                 spawnPoint = p1SpawnPoint;
-                GameObject P1 = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
-                CamaraMovement[] allCamera = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
-
-                CamaraMovement otherCamera = null;
-                CamaraMovement thisCamera = null;
-
-                foreach (CamaraMovement p in allCamera)
-                {
-                    if (p.gameObject != this)
-                    {
-                        otherCamera = p;
-                        break;
-                    }
-                }
-                foreach (CamaraMovement m in allCamera)
-                {
-                    if (m.gameObject == this)
-                    {
-                        thisCamera = m;
-                        break;
-                    }
-                }
+                CamSpawnPoint = p1CamSpawnPoint;
+                GameObject P1Save = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
+                GameObject P1CamSave = PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
+                P1Save = P1;
+                P1CamSave = P1Cam;
             }
 
             else if (playerRole == "P2")
             {
                 spawnPoint = p2SpawnPoint;
-                GameObject P2 = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
+                CamSpawnPoint = p2CamSpawnPoint;
+                GameObject P2Save = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
+                GameObject P2CamSave = PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
+                P2Save = P2;
+                P2CamSave = P2Cam;
             }
+
+            PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
+            PlayerSetup CamSetupP2 = P2.GetComponent<PlayerSetup>();
+
+            CameraSwaping P1CamSwap = P1Cam.GetComponent<CameraSwaping>();
+            CameraSwaping P2CamSwap = P2Cam.GetComponent<CameraSwaping>();
+
+            CamaraMovement P1CamMove = P1Cam.GetComponent<CamaraMovement>();
+            CamaraMovement P2CamMove = P2Cam.GetComponent<CamaraMovement>();
+
+            PlayerSwaping P1Swap = P1.GetComponent<PlayerSwaping>();
+            PlayerSwaping P2Swap = P2.GetComponent<PlayerSwaping>();
+
+            Movement P1Movement = P1.GetComponent<Movement>();
+            Movement P2Movement = P2.GetComponent<Movement>();
+
+            CamSetupP1.playerCamera = P1Cam;
+            CamSetupP2.playerCamera = P2Cam;
+
+            P1Movement.cameraMovement = P1CamMove;
+            P2Movement.cameraMovement = P2CamMove;
+
+            P1Movement.Camera = P1Cam;
+            P2Movement.Camera = P2Cam;
+
+            P1Swap.Player2 = P2;
+            P2Swap.Player2 = P1;
+
+            P1CamSwap.Camera2 = P2Cam;
+            P2CamSwap.Camera2 = P1Cam;
 
             //if (spawnPoint != null)
             //{

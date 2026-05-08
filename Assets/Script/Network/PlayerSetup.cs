@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
-    [SerializeField] GameObject playerCamera;
+    public GameObject playerCamera;
 
     //private Movement movement;
 

@@ -4,7 +4,7 @@ public class PlayerSwaping : MonoBehaviour
 {
     [SerializeField] KeyCode SwapKey;
     [SerializeField] float Cooldown;
-    [SerializeField] GameObject Player2;
+    public GameObject Player2;
 
     bool canDo;
     private float time;
