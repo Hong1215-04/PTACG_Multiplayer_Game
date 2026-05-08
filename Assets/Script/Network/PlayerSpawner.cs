@@ -19,10 +19,10 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     //[SerializeField] Movement MoveP1;
     //[SerializeField] Movement MoveP2;
 
-    //public GameObject P1;
-    //public GameObject P2;
-    //public GameObject P1Cam;
-    //public GameObject P2Cam;
+    public GameObject P1;
+    public GameObject P2;
+    public GameObject P1Cam;
+    public GameObject P2Cam;
 
     public static PlayerSpawner Instance;
 
@@ -46,17 +46,20 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             {
                 spawnPoint = p1SpawnPoint;
                 CamSpawnPoint = p1CamSpawnPoint;
-                PhotonNetwork.Instantiate("Character_Test1", spawnPoint.position, spawnPoint.rotation);
-                PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
+                P1 = PhotonNetwork.Instantiate("Character_Test1", spawnPoint.position, spawnPoint.rotation);
+                P1Cam = PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
 
+                StartCoroutine(FindOtherPlayerWhenReady());
             }
 
             else if (playerRole == "P2")
             {
                 spawnPoint = p2SpawnPoint;
                 CamSpawnPoint = p2CamSpawnPoint;
-                PhotonNetwork.Instantiate("Character_Test2", spawnPoint.position, spawnPoint.rotation);
-                PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
+                P1 = PhotonNetwork.Instantiate("Character_Test2", spawnPoint.position, spawnPoint.rotation);
+                P1Cam = PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
+
+                StartCoroutine(FindOtherPlayerWhenReady());
             }
 
             //PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
@@ -102,39 +105,39 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         }
     }
 
-    //IEnumerator FindOtherPlayerWhenReadyP1()
-    //{
-    //    GameObject otherplayer = null;
-    //    GameObject othercamera = null;
+    IEnumerator FindOtherPlayerWhenReady()
+    {
+        GameObject otherplayer = null;
+        GameObject othercamera = null;
 
-    //    while (otherplayer == null || othercamera == null)
-    //    {
-    //        foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
-    //        {
-    //            if (pv.Owner != PhotonNetwork.LocalPlayer)
-    //            {
-    //                if (pv.CompareTag("Player"))
-    //                {
-    //                    otherplayer = pv.gameObject;
-    //                    break;
-    //                }
-    //                if (pv.CompareTag("MainCamera"))
-    //                {
-    //                    othercamera = pv.gameObject;
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //        yield return new WaitForSeconds(0.2f);
+        while (otherplayer == null || othercamera == null)
+        {
+            foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
+            {
+                if (pv.Owner != PhotonNetwork.LocalPlayer)
+                {
+                    if (pv.CompareTag("Player"))
+                    {
+                        otherplayer = pv.gameObject;
+                        break;
+                    }
+                    if (pv.CompareTag("MainCamera"))
+                    {
+                        othercamera = pv.gameObject;
+                        break;
+                    }
+                }
+            }
+            yield return new WaitForSeconds(0.2f);
 
-    //        P2 = otherplayer;
-    //        P2Cam = othercamera;
+            P2 = otherplayer;
+            P2Cam = othercamera;
 
-    //        ReferencesforP1();
-    //    }
-    //}
+            ReferencesForPlayer();
+        }
+    }
 
-    
+
 
     //void ReferencesforP2()
     //{
@@ -171,38 +174,38 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     //    P2CamSwap.Camera2 = P1Cam;
     //}
 
-    //void ReferencesforP1()
-    //{
-    //    PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
-    //    PlayerSetup CamSetupP2 = P2.GetComponent<PlayerSetup>();
+    void ReferencesForPlayer()
+    {
+        PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
+        PlayerSetup CamSetupP2 = P2.GetComponent<PlayerSetup>();
 
-    //    CameraSwaping P1CamSwap = P1Cam.GetComponent<CameraSwaping>();
-    //    CameraSwaping P2CamSwap = P2Cam.GetComponent<CameraSwaping>();
+        CameraSwaping P1CamSwap = P1Cam.GetComponent<CameraSwaping>();
+        CameraSwaping P2CamSwap = P2Cam.GetComponent<CameraSwaping>();
 
-    //    CamaraMovement P1CamMove = P1Cam.GetComponent<CamaraMovement>();
-    //    CamaraMovement P2CamMove = P2Cam.GetComponent<CamaraMovement>();
+        CamaraMovement P1CamMove = P1Cam.GetComponent<CamaraMovement>();
+        CamaraMovement P2CamMove = P2Cam.GetComponent<CamaraMovement>();
 
-    //    PlayerSwaping P1Swap = P1.GetComponent<PlayerSwaping>();
-    //    PlayerSwaping P2Swap = P2.GetComponent<PlayerSwaping>();
+        PlayerSwaping P1Swap = P1.GetComponent<PlayerSwaping>();
+        PlayerSwaping P2Swap = P2.GetComponent<PlayerSwaping>();
 
-    //    Movement P1Movement = P1.GetComponent<Movement>();
-    //    Movement P2Movement = P2.GetComponent<Movement>();
+        Movement P1Movement = P1.GetComponent<Movement>();
+        Movement P2Movement = P2.GetComponent<Movement>();
 
-    //    CamSetupP1.playerCamera1 = P1Cam;
-    //    CamSetupP2.playerCamera1 = P2Cam;
-    //    CamSetupP1.playerCamera2 = P2Cam;
-    //    CamSetupP2.playerCamera2 = P1Cam;
+        CamSetupP1.playerCamera1 = P1Cam;
+        CamSetupP2.playerCamera1 = P2Cam;
+        CamSetupP1.playerCamera2 = P2Cam;
+        CamSetupP2.playerCamera2 = P1Cam;
 
-    //    P1Movement.cameraMovement = P1CamMove;
-    //    P2Movement.cameraMovement = P2CamMove;
+        P1Movement.cameraMovement = P1CamMove;
+        P2Movement.cameraMovement = P2CamMove;
 
-    //    P1Movement.Camera = P1Cam;
-    //    P2Movement.Camera = P2Cam;
+        P1Movement.Camera = P1Cam;
+        P2Movement.Camera = P2Cam;
 
-    //    P1Swap.Player2 = P2;
-    //    P2Swap.Player2 = P1;
+        P1Swap.Player2 = P2;
+        P2Swap.Player2 = P1;
 
-    //    P1CamSwap.Camera2 = P2Cam;
-    //    P2CamSwap.Camera2 = P1Cam;
-    //}
+        P1CamSwap.Camera2 = P2Cam;
+        P2CamSwap.Camera2 = P1Cam;
+    }
 }
