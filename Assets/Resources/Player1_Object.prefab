@@ -162,7 +162,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSwaping
   SwapKey: 103
   Cooldown: 3
-  Player2: {fileID: 0}
+  Player2: {fileID: 5175738579694529420, guid: 13d119c94c9632d44aafcc315e5947e0, type: 3}
 --- !u!114 &5261050492914064379
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -186,8 +186,8 @@ MonoBehaviour:
   RotateLeft: 113
   RotateRight: 101
   MoveHori: Horizontal
-  cameraMovement: {fileID: 0}
-  Camera: {fileID: 0}
+  cameraMovement: {fileID: 182201598856108080, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
+  Camera: {fileID: 4378294709625587829, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
   rb: {fileID: 8803635952531830479}
 --- !u!114 &1362147809340125314
 MonoBehaviour:
@@ -400,8 +400,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c9e9be9d1f03e745858b846c0708989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSetup
-  playerCamera1: {fileID: 0}
-  playerCamera2: {fileID: 0}
+  playerCamera1: {fileID: 4378294709625587829, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
+  playerCamera2: {fileID: 4378294709625587829, guid: 1030003383816ad489325f186493b3d2, type: 3}
 --- !u!114 &8648575646896148524
 MonoBehaviour:
   m_ObjectHideFlags: 0

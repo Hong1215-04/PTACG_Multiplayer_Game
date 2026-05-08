@@ -25,7 +25,7 @@ public class PlayerSpawner : MonoBehaviour
 
     public static PlayerSpawner Instance;
 
-    void Awake()
+    void Start()
     {
         if (!PhotonNetwork.IsConnectedAndReady)
             return;

@@ -176,7 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraSwaping
   SwapKey: 103
   Cooldown: 3
-  Camera2: {fileID: 0}
+  Camera2: {fileID: 4378294709625587829, guid: 7dc41c9b2553f7a42a59ebbc77442030, type: 3}
 --- !u!114 &-1944924502192202364
 MonoBehaviour:
   m_ObjectHideFlags: 0
