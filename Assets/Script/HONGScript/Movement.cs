@@ -19,7 +19,7 @@ public class Movement : MonoBehaviourPun
     public string MoveHori;
 
     public CamaraMovement cameraMovement;
-    public GameObject Camera;
+    //public GameObject Camera;
 
     float horizontalInput;
     public Rigidbody rb;
