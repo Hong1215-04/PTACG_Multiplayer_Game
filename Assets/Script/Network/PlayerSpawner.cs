@@ -222,6 +222,10 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(0.2f);
 
             P2 = otherplayer;
+            P2Pos = P2.transform.Find("Character_Test").gameObject;
+            Camera2Move = P2.GetComponentInChildren<CamaraMovement>();
+
+            P1Pos = P1.transform.Find("Character_Test").gameObject;
         }
     }
 
