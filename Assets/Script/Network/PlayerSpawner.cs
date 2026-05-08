@@ -47,8 +47,8 @@ public class PlayerSpawner : MonoBehaviour
                 CamSpawnPoint = p1CamSpawnPoint;
                 GameObject P1Save = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
                 GameObject P1CamSave = PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
-                P1Save = P1;
-                P1CamSave = P1Cam;
+                P1 = P1Save;
+                P1Cam = P1CamSave;
             }
 
             else if (playerRole == "P2")
@@ -57,8 +57,8 @@ public class PlayerSpawner : MonoBehaviour
                 CamSpawnPoint = p2CamSpawnPoint;
                 GameObject P2Save = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
                 GameObject P2CamSave = PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
-                P2Save = P2;
-                P2CamSave = P2Cam;
+                P2 = P2Save;
+                P2Cam = P2CamSave;
             }
 
             PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
