@@ -53,8 +53,8 @@ public class PlayerSpawner : MonoBehaviour
             {
                 spawnPoint = p2SpawnPoint;
                 CamSpawnPoint = p2CamSpawnPoint;
-                P2 = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
-                P2Cam = PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
+                P2 = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
+                P2Cam = PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
             }
 
             PlayerSetup CamSetupP1 = P1.GetComponent<PlayerSetup>();
