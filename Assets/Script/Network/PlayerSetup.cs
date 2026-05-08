@@ -17,6 +17,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
 
     void Start()
     {
+        canDo = true;
         swap = false;
         // 从子物体找 PhotonView
         PhotonView pv = GetComponentInChildren<PhotonView>();
@@ -46,6 +47,7 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         {
             if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
             {
+                Debug.Log("Swap");
                 playerCamera.GetComponent<Camera>().enabled = false;
                 swap = true;
             }
@@ -60,12 +62,12 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
             if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
             {
                 playerCamera.GetComponent<Camera>().enabled = true;
-                swap = true;
+                swap = false;
             }
             else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
             {
                 playerCamera.GetComponent<Camera>().enabled = false;
-                swap = true;
+                swap = false;
             }
         }
     }
@@ -83,7 +85,12 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         }
         if (Input.GetKeyDown(SwapKey))
         {
-            Swapping();
+            if (canDo)
+            {
+                Swapping();
+                canDo = false;
+                time = 0f;
+            }
         }
     }
 }
