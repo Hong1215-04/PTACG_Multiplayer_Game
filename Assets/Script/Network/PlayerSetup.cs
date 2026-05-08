@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
     public GameObject playerCamera;
-    public PlayerRow playerRow;
+    public string PlayerRole;
     //public GameObject playerCamera2;
 
     //private Movement movement;
