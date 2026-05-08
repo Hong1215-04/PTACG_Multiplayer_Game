@@ -63,6 +63,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 4631245065964279627}
     - target: {fileID: 171795760309795949, guid: 662228745193e0048ad723022ef495a9, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 171795760309795949, guid: 662228745193e0048ad723022ef495a9, type: 3}
       propertyPath: cameraMovement
       value: 
       objectReference: {fileID: 9079503609430001422}
@@ -72,7 +76,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2682967183433649207, guid: 662228745193e0048ad723022ef495a9, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 102.06584
+      value: 100.55007
       objectReference: {fileID: 0}
     - target: {fileID: 2682967183433649207, guid: 662228745193e0048ad723022ef495a9, type: 3}
       propertyPath: m_LocalPosition.y
@@ -80,7 +84,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2682967183433649207, guid: 662228745193e0048ad723022ef495a9, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.1093025
+      value: -0.50932693
       objectReference: {fileID: 0}
     - target: {fileID: 2682967183433649207, guid: 662228745193e0048ad723022ef495a9, type: 3}
       propertyPath: m_LocalRotation.w
@@ -114,6 +118,10 @@ PrefabInstance:
       propertyPath: Player2
       value: 
       objectReference: {fileID: 8781734852685728468, guid: fb48719594018044da59dff188b9fcc4, type: 3}
+    - target: {fileID: 6355532641948279964, guid: 662228745193e0048ad723022ef495a9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
