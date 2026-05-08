@@ -16,14 +16,15 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         if (pv.IsMine)
         {
             GetComponentInChildren<Movement>().enabled = true;
-            if (playerCamera != null)
-                playerCamera.GetComponent<Camera>().enabled = true;
+            
+            playerCamera1.GetComponent<Camera>().enabled = true;
         }
         else
         {
             GetComponentInChildren<Movement>().enabled = false;
-            if (playerCamera != null)
-                playerCamera.GetComponent<Camera>().enabled = false;
+            playerCamera2.GetComponent<Camera>().enabled = false;
+            //if (playerCamera != null)
+                //playerCamera.GetComponent<Camera>().enabled = false;
         }
     }
 }
