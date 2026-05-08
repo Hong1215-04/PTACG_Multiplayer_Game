@@ -45,7 +45,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             if (playerRole == "P1")
             {
                 spawnPoint = p1SpawnPoint;
-                CamSpawnPoint = p1CamSpawnPoint;
+                //CamSpawnPoint = p1CamSpawnPoint;
                 GameObject P1 = PhotonNetwork.Instantiate("Player1_Object", spawnPoint.position, spawnPoint.rotation);
                 P1.GetComponentInChildren<Camera>().enabled = true;
                 //PhotonNetwork.Instantiate("Main_Camera", CamSpawnPoint.position, CamSpawnPoint.rotation);
@@ -55,7 +55,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             else if (playerRole == "P2")
             {
                 spawnPoint = p2SpawnPoint;
-                CamSpawnPoint = p2CamSpawnPoint;
+                //CamSpawnPoint = p2CamSpawnPoint;
                 GameObject P2 = PhotonNetwork.Instantiate("Player2Object", spawnPoint.position, spawnPoint.rotation);
                 P2.GetComponentInChildren<Camera>().enabled = true;
                 //PhotonNetwork.Instantiate("Main_Camera2", CamSpawnPoint.position, CamSpawnPoint.rotation);
