@@ -132,10 +132,11 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             if (pv.Owner != PhotonNetwork.LocalPlayer)
             {
                 P2Pos = pv.gameObject;
-                Camera2Move = P2Pos.GetComponentInParent<CamaraMovement>();
                 break;
             }
         }
+
+        Camera2Move = P2Pos.GetComponentInParent<CamaraMovement>();
 
         if (!canDo)
         {
