@@ -76,8 +76,10 @@ public class PlayerSpawner : MonoBehaviour
             Movement P1Movement = P1.GetComponent<Movement>();
             Movement P2Movement = P2.GetComponent<Movement>();
 
-            CamSetupP1.playerCamera = P1Cam;
-            CamSetupP2.playerCamera = P2Cam;
+            CamSetupP1.playerCamera1 = P1Cam;
+            CamSetupP2.playerCamera1 = P2Cam;
+            CamSetupP1.playerCamera2 = P2Cam;
+            CamSetupP2.playerCamera2 = P1Cam;
 
             P1Movement.cameraMovement = P1CamMove;
             P2Movement.cameraMovement = P2CamMove;

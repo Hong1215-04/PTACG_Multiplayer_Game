@@ -363,7 +363,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1178600934588765063}
-  - component: {fileID: -6293176188699478321}
   - component: {fileID: 728620092012301489}
   m_Layer: 10
   m_Name: Player1_Object
@@ -388,21 +387,6 @@ Transform:
   - {fileID: 419305548843710505}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &-6293176188699478321
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8781734852685728468}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a0547c7c2e4aee34b93ed6337d7a187e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerVisual
-  playerRenderer: {fileID: 9084806475918078976}
-  p1Color: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  p2Color: {r: 1, g: 0, b: 0, a: 1}
 --- !u!114 &728620092012301489
 MonoBehaviour:
   m_ObjectHideFlags: 0

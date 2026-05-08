@@ -178,7 +178,7 @@ public class DeadCollied : MonoBehaviour, IOnEventCallback
 
     void ShowDeathUI()
     {
-        GameOverVoteManager.Instance.ShowDeathVote();
+        //GameOverVoteManager.Instance.ShowDeathVote();
     }
 
     void ShowWinUI()

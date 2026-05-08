@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class PlayerSetup : MonoBehaviourPunCallbacks
 {
-    public GameObject playerCamera;
+    public GameObject playerCamera1;
+    public GameObject playerCamera2;
 
     //private Movement movement;
 

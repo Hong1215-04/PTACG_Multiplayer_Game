@@ -151,7 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5de6798d3f1656f4e98dde45bf5d8aed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CamaraMovement
-  player: {fileID: 0}
   CameraPosition: {fileID: 5004742709550554247}
   FrontRotation: 180
   LeftRotation: 90
