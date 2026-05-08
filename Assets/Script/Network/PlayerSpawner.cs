@@ -160,40 +160,46 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
     void Swapping()
     {
-        Vector3 thisPlayerPos = P1Pos.transform.position;
-        P1Pos.transform.position = P2Pos.transform.position;
-        P2Pos.transform.position = thisPlayerPos;
+        Vector3 p1Pos = P1.transform.position;
+        Vector3 p2Pos = P2Pos.transform.position;
 
-        Quaternion thisPlayerRot = P1Pos.transform.rotation;
-        P1Pos.transform.rotation = P2Pos.transform.rotation;
-        P2Pos.transform.rotation = thisPlayerRot;
-        //if (!swap)
-        //{
-        //    if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
-        //    {
-        //        Debug.Log("Swap");
-        //        playerCamera.GetComponent<Camera>().enabled = false;
-        //        swap = true;
-        //    }
-        //    else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
-        //    {
-        //        playerCamera.GetComponent<Camera>().enabled = true;
-        //        swap = true;
-        //    }
-        //}
-        //else if (swap)
-        //{
-        //    if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
-        //    {
-        //        playerCamera.GetComponent<Camera>().enabled = true;
-        //        swap = false;
-        //    }
-        //    else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
-        //    {
-        //        playerCamera.GetComponent<Camera>().enabled = false;
-        //        swap = false;
-        //    }
-        //}
+        // Tell ALL clients to swap positions
+        PhotonView pv = GetComponent<PhotonView>();
+        pv.RPC("TeleportPlayer", RpcTarget.All, p1Pos, p2Pos);
+    }
+    //if (!swap)
+    //{
+    //    if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
+    //    {
+    //        Debug.Log("Swap");
+    //        playerCamera.GetComponent<Camera>().enabled = false;
+    //        swap = true;
+    //    }
+    //    else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
+    //    {
+    //        playerCamera.GetComponent<Camera>().enabled = true;
+    //        swap = true;
+    //    }
+    //}
+    //else if (swap)
+    //{
+    //    if (this.gameObject.layer == LayerMask.NameToLayer("Player1"))
+    //    {
+    //        playerCamera.GetComponent<Camera>().enabled = true;
+    //        swap = false;
+    //    }
+    //    else if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
+    //    {
+    //        playerCamera.GetComponent<Camera>().enabled = false;
+    //        swap = false;
+    //    }
+    //}
+
+    [PunRPC]
+    void TeleportPlayer(Vector3 p1NewPos, Vector3 p2NewPos)
+    {
+        P1.transform.position = p1NewPos; // your local player goes to P2's old spot
+        P2Pos.transform.position = p2NewPos; // other player goes to P1's old spot
     }
 
     public void ChangeRotationBool()
