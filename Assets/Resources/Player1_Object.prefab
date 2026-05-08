@@ -273,7 +273,7 @@ GameObject:
   - component: {fileID: 7908500777500420110}
   m_Layer: 10
   m_Name: DeadCollision
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -366,7 +366,7 @@ GameObject:
   - component: {fileID: 728620092012301489}
   m_Layer: 10
   m_Name: Player1_Object
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
