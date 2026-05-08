@@ -198,8 +198,8 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     [PunRPC]
     void TeleportPlayer(Vector3 p1NewPos, Vector3 p2NewPos)
     {
-        P1.transform.position = p1NewPos; // your local player goes to P2's old spot
-        P2Pos.transform.position = p2NewPos; // other player goes to P1's old spot
+        P1.transform.position = p2NewPos; // your local player goes to P2's old spot
+        P2Pos.transform.position = p1NewPos; // other player goes to P1's old spot
     }
 
     public void ChangeRotationBool()
