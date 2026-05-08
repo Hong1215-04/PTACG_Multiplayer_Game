@@ -22,7 +22,12 @@ public class PlayerSetup : MonoBehaviourPunCallbacks
         {
             // GetComponentInChildren<Movement>().enabled = false;
             if (playerCamera != null)
-                playerCamera.GetComponent<Camera>().enabled = false;
+            {
+                if (this.gameObject.layer == LayerMask.NameToLayer("Player2"))
+                {
+                    playerCamera.GetComponent<Camera>().enabled = false;
+                }
+            }  
         }
     }
 }
