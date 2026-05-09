@@ -181,13 +181,17 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             return;
         }
 
+        // 先把两个 Owner 存起来，避免转移顺序导致引用错乱
+        Photon.Realtime.Player myOwner = myPV.Owner;
+        Photon.Realtime.Player otherOwner = otherPV.Owner;
+
         // 位置交换
         myPV.RPC("RPC_TeleportMe", RpcTarget.All, otherPos, otherRot);
         otherPV.RPC("RPC_TeleportMe", RpcTarget.All, myPos, myRot);
 
-        // Ownership 互换，让每个人继续控制移动到自己位置的那个物体
-        myPV.TransferOwnership(otherPV.Owner);    // 把我的物体给对方
-        otherPV.TransferOwnership(myPV.Owner);    // 把对方的物体给我
+        // Ownership 互换，用提前存好的引用
+        myPV.TransferOwnership(otherOwner);
+        otherPV.TransferOwnership(myOwner);
     }
     //if (!swap)
     //{
