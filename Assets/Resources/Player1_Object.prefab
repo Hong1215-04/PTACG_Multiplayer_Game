@@ -114,6 +114,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8098358191002505557, guid: 45d3c23e6fbedd8408a1b5dfbf6f36fd, type: 3}
+      propertyPath: OwnershipTransfer
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8238069243635203406, guid: 45d3c23e6fbedd8408a1b5dfbf6f36fd, type: 3}
       propertyPath: m_Name
       value: 'Character_Test '

@@ -168,9 +168,9 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         }
 
         Vector3 myPos = P1Pos.transform.position;
-        Quaternion myRot = P1Pos.transform.rotation;      // ← 新增
+        Quaternion myRot = P1Pos.transform.rotation;
         Vector3 otherPos = P2Pos.transform.position;
-        Quaternion otherRot = P2Pos.transform.rotation;   // ← 新增
+        Quaternion otherRot = P2Pos.transform.rotation;
 
         PhotonView myPV = P1Pos.GetComponent<PhotonView>();
         PhotonView otherPV = P2Pos.GetComponent<PhotonView>();
@@ -181,8 +181,13 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             return;
         }
 
-        myPV.RPC("RPC_TeleportMe", RpcTarget.All, otherPos, otherRot);   // ← 带旋转
-        otherPV.RPC("RPC_TeleportMe", RpcTarget.All, myPos, myRot);      // ← 带旋转
+        // 位置交换
+        myPV.RPC("RPC_TeleportMe", RpcTarget.All, otherPos, otherRot);
+        otherPV.RPC("RPC_TeleportMe", RpcTarget.All, myPos, myRot);
+
+        // Ownership 互换，让每个人继续控制移动到自己位置的那个物体
+        myPV.TransferOwnership(otherPV.Owner);    // 把我的物体给对方
+        otherPV.TransferOwnership(myPV.Owner);    // 把对方的物体给我
     }
     //if (!swap)
     //{
