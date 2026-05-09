@@ -171,8 +171,28 @@ public class Movement : MonoBehaviourPun
     [PunRPC]
     public void RPC_TeleportMe(Vector3 targetPos)
     {
-        // 直接设置位置，Rigidbody 也要一起移动否则会被物理弹回
         rb.position = targetPos;
         transform.position = targetPos;
+
+        // 如果是本地玩家，更新摄像机的跟随目标到新位置
+        if (photonView.IsMine)
+        {
+            CamaraMovement cam = GetComponentInParent<CamaraMovement>();
+            if (cam == null)
+            {
+                // CamaraMovement 在兄弟物体 Main_Camera 上，从父物体找
+                cam = transform.parent.GetComponentInChildren<CamaraMovement>();
+            }
+
+            if (cam != null)
+            {
+                cam.player = transform; // 继续跟着自己的 Character_Test
+                cam.CameraPosition.position = targetPos; // 重置摄像机锚点到新位置
+            }
+            else
+            {
+                Debug.LogWarning("[Teleport] 找不到 CamaraMovement");
+            }
+        }
     }
 }
