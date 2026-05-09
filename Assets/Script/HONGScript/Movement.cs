@@ -36,6 +36,7 @@ public class Movement : MonoBehaviourPun
 
     private void FixedUpdate()
     {
+        Debug.Log($"[Move] alive={alive}, IsMine={photonView.IsMine}");
         if (!alive) return;
         // forwardMove & horizontalmove is just variable (name) not function
         if (photonView.IsMine)
