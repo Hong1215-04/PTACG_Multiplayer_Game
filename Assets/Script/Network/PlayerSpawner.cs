@@ -132,8 +132,8 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         {
             if (pv.Owner != null && pv.Owner != PhotonNetwork.LocalPlayer)
             {
-                P2Pos = pv.gameObject;
-                Camera2Move = P2Pos.GetComponentInChildren<CamaraMovement>();
+                P2Pos = pv.gameObject; // 这就是对方的 Character_Test
+                Camera2Move = P2Pos.GetComponentInParent<CamaraMovement>(); // 从父物体找 CamaraMovement
                 break;
             }
         }
@@ -170,9 +170,9 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         Vector3 myPos = P1Pos.transform.position;
         Vector3 otherPos = P2Pos.transform.position;
 
-        // 改成从子物体找 PhotonView
-        PhotonView myPV = P1.GetComponentInChildren<PhotonView>();
-        PhotonView otherPV = P2Pos.GetComponentInChildren<PhotonView>();
+        // Character_Test 上的 PhotonView
+        PhotonView myPV = P1Pos.GetComponent<PhotonView>();
+        PhotonView otherPV = P2Pos.GetComponent<PhotonView>();
 
         if (myPV == null || otherPV == null)
         {
@@ -220,6 +220,12 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
     public void ChangeRotationBool()
     {
+            if (CamMove == null || Camera2Move == null)
+        {
+            Debug.LogWarning("[Swap] CamMove 或 Camera2Move 为 null，跳过旋转交换");
+            return;
+        }
+
         bool nowFront = CamMove.Front;
         CamMove.Front = Camera2Move.Front;
         Camera2Move.Front = nowFront;
