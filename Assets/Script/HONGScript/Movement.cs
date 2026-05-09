@@ -174,21 +174,16 @@ public class Movement : MonoBehaviourPun
         transform.position = targetPos;
         transform.rotation = targetRot;
 
+        Debug.Log($"[Teleport] IsMine={photonView.IsMine}, Owner={photonView.Owner?.NickName}");
+
         if (photonView.IsMine)
         {
-            // 从父物体下找本地玩家自己的摄像机
             CamaraMovement cam = transform.parent.GetComponentInChildren<CamaraMovement>();
             if (cam != null)
             {
                 cam.player = transform;
                 cam.CameraPosition.position = targetPos;
-
-                // 同时更新 Movement 里的 cameraMovement 引用
                 cameraMovement = cam;
-            }
-            else
-            {
-                Debug.LogWarning("[Teleport] 找不到 CamaraMovement");
             }
         }
     }
