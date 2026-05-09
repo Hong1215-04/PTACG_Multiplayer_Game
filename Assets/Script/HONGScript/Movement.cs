@@ -167,4 +167,12 @@ public class Movement : MonoBehaviourPun
     //{
     //    return cameraMovement;
     //}
+
+    [PunRPC]
+    public void RPC_TeleportMe(Vector3 targetPos)
+    {
+        // 直接设置位置，Rigidbody 也要一起移动否则会被物理弹回
+        rb.position = targetPos;
+        transform.position = targetPos;
+    }
 }

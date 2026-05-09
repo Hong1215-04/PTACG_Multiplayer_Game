@@ -129,10 +129,10 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     {
         foreach (PhotonView pv in FindObjectsOfType<PhotonView>())
         {
-            if (pv.Owner != PhotonNetwork.LocalPlayer)
+            if (pv.Owner != null && pv.Owner != PhotonNetwork.LocalPlayer)
             {
                 P2Pos = pv.gameObject;
-                Camera2Move = P2Pos.GetComponentInParent<CamaraMovement>();
+                Camera2Move = P2Pos.GetComponentInChildren<CamaraMovement>();
                 break;
             }
         }
@@ -160,12 +160,27 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
 
     void Swapping()
     {
-        Vector3 p1Pos = P1.transform.position;
-        Vector3 p2Pos = P2Pos.transform.position;
+        if (P2Pos == null)
+        {
+            Debug.LogWarning("[Swap] P2Pos 还没找到，无法交换");
+            return;
+        }
 
-        // Tell ALL clients to swap positions
-        PhotonView pv = GetComponent<PhotonView>();
-        pv.RPC("TeleportPlayer", RpcTarget.All, p1Pos, p2Pos);
+        Vector3 myPos = P1Pos.transform.position;   // 用 P1Pos（Character_Test）而不是 P1（根物体）
+        Vector3 otherPos = P2Pos.transform.position;
+
+        PhotonView myPV = P1.GetComponent<PhotonView>();
+        PhotonView otherPV = P2Pos.GetComponent<PhotonView>();
+
+        if (myPV == null || otherPV == null)
+        {
+            Debug.LogWarning("[Swap] PhotonView 找不到");
+            return;
+        }
+
+        // 各自通知自己去对方的位置，不用同一个 RPC 处理两个人
+        myPV.RPC("RPC_TeleportMe", RpcTarget.All, otherPos);
+        otherPV.RPC("RPC_TeleportMe", RpcTarget.All, myPos);
     }
     //if (!swap)
     //{
@@ -195,12 +210,12 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
     //    }
     //}
 
-    [PunRPC]
-    void TeleportPlayer(Vector3 p1NewPos, Vector3 p2NewPos)
-    {
-        P1.transform.position = p2NewPos; // your local player goes to P2's old spot
-        P2Pos.transform.position = p1NewPos; // other player goes to P1's old spot
-    }
+    // [PunRPC]
+    // void TeleportPlayer(Vector3 p1NewPos, Vector3 p2NewPos)
+    // {
+    //     P1.transform.position = p2NewPos; // your local player goes to P2's old spot
+    //     P2Pos.transform.position = p1NewPos; // other player goes to P1's old spot
+    // }
 
     public void ChangeRotationBool()
     {
