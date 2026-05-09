@@ -42,6 +42,7 @@ MonoBehaviour:
   - RPC_StartGame
   - AllPlayersDie
   - AllPlayersWin
+  - RPC_Swap
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
