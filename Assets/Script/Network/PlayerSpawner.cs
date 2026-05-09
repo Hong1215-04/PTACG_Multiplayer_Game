@@ -44,6 +44,7 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             return;
 
         Instance = this;
+        canDo = true;
 
         object role;
 
@@ -166,11 +167,12 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             return;
         }
 
-        Vector3 myPos = P1Pos.transform.position;   // 用 P1Pos（Character_Test）而不是 P1（根物体）
+        Vector3 myPos = P1Pos.transform.position;
         Vector3 otherPos = P2Pos.transform.position;
 
-        PhotonView myPV = P1.GetComponent<PhotonView>();
-        PhotonView otherPV = P2Pos.GetComponent<PhotonView>();
+        // 改成从子物体找 PhotonView
+        PhotonView myPV = P1.GetComponentInChildren<PhotonView>();
+        PhotonView otherPV = P2Pos.GetComponentInChildren<PhotonView>();
 
         if (myPV == null || otherPV == null)
         {
@@ -178,7 +180,6 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             return;
         }
 
-        // 各自通知自己去对方的位置，不用同一个 RPC 处理两个人
         myPV.RPC("RPC_TeleportMe", RpcTarget.All, otherPos);
         otherPV.RPC("RPC_TeleportMe", RpcTarget.All, myPos);
     }
