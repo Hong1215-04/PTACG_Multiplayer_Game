@@ -169,29 +169,19 @@ public class Movement : MonoBehaviourPun
     //}
 
     [PunRPC]
-    public void RPC_TeleportMe(Vector3 targetPos)
+    public void RPC_TeleportMe(Vector3 targetPos, Quaternion targetRot)  // ← 加 Quaternion 参数
     {
         rb.position = targetPos;
         transform.position = targetPos;
+        transform.rotation = targetRot;  // ← 同步旋转
 
-        // 如果是本地玩家，更新摄像机的跟随目标到新位置
         if (photonView.IsMine)
         {
-            CamaraMovement cam = GetComponentInParent<CamaraMovement>();
-            if (cam == null)
-            {
-                // CamaraMovement 在兄弟物体 Main_Camera 上，从父物体找
-                cam = transform.parent.GetComponentInChildren<CamaraMovement>();
-            }
-
+            CamaraMovement cam = transform.parent.GetComponentInChildren<CamaraMovement>();
             if (cam != null)
             {
-                cam.player = transform; // 继续跟着自己的 Character_Test
-                cam.CameraPosition.position = targetPos; // 重置摄像机锚点到新位置
-            }
-            else
-            {
-                Debug.LogWarning("[Teleport] 找不到 CamaraMovement");
+                cam.player = transform;
+                cam.CameraPosition.position = targetPos;
             }
         }
     }

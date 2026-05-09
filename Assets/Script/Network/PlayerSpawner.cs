@@ -168,9 +168,10 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
         }
 
         Vector3 myPos = P1Pos.transform.position;
+        Quaternion myRot = P1Pos.transform.rotation;      // ← 新增
         Vector3 otherPos = P2Pos.transform.position;
+        Quaternion otherRot = P2Pos.transform.rotation;   // ← 新增
 
-        // Character_Test 上的 PhotonView
         PhotonView myPV = P1Pos.GetComponent<PhotonView>();
         PhotonView otherPV = P2Pos.GetComponent<PhotonView>();
 
@@ -180,8 +181,8 @@ public class PlayerSpawner : MonoBehaviourPunCallbacks
             return;
         }
 
-        myPV.RPC("RPC_TeleportMe", RpcTarget.All, otherPos);
-        otherPV.RPC("RPC_TeleportMe", RpcTarget.All, myPos);
+        myPV.RPC("RPC_TeleportMe", RpcTarget.All, otherPos, otherRot);   // ← 带旋转
+        otherPV.RPC("RPC_TeleportMe", RpcTarget.All, myPos, myRot);      // ← 带旋转
     }
     //if (!swap)
     //{
