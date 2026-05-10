@@ -2803,11 +2803,11 @@ Transform:
   m_GameObject: {fileID: 201475440}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 32.29009, y: 1.04754, z: 32.704147}
+  m_LocalPosition: {x: 35.19, y: 2.55, z: 33.799995}
   m_LocalScale: {x: 0.85842425, y: 4.9405, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2120179980}
+  m_Father: {fileID: 1549382273}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &204722985
 GameObject:
@@ -9774,6 +9774,7 @@ GameObject:
   - component: {fileID: 630672008}
   - component: {fileID: 630672007}
   - component: {fileID: 630672006}
+  - component: {fileID: 630672009}
   m_Layer: 6
   m_Name: HiddenDoor
   m_TagString: Untagged
@@ -9874,6 +9875,28 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 630672004}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!95 &630672009
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 630672004}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 309cdc7c5c8526e4aaf0479f525d3b95, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &635972318
 GameObject:
   m_ObjectHideFlags: 0
@@ -10246,11 +10269,11 @@ Transform:
   m_GameObject: {fileID: 650956616}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 34.94009, y: 1.04754, z: 51.344147}
+  m_LocalPosition: {x: 37.84, y: 2.55, z: 52.439995}
   m_LocalScale: {x: 0.85842425, y: 4.9405, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2120179980}
+  m_Father: {fileID: 1549382273}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &652433636
 GameObject:
@@ -13077,11 +13100,11 @@ Transform:
   m_GameObject: {fileID: 821054582}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 30.87009, y: 1.04754, z: 44.22415}
+  m_LocalPosition: {x: 33.77, y: 2.55, z: 45.32}
   m_LocalScale: {x: 0.85842425, y: 4.9405, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2120179980}
+  m_Father: {fileID: 1549382273}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &823434714
 GameObject:
@@ -13672,7 +13695,7 @@ Transform:
   m_GameObject: {fileID: 857971503}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -2.74, y: -0.25999975, z: 26.946}
+  m_LocalPosition: {x: -2.36, y: -0.25999975, z: 26.946}
   m_LocalScale: {x: 2.7546315, y: 2.0173, z: 0.495838}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -22099,11 +22122,11 @@ Transform:
   m_GameObject: {fileID: 1326940460}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 32.45009, y: 1.04754, z: 54.904152}
+  m_LocalPosition: {x: 35.35, y: 2.55, z: 56}
   m_LocalScale: {x: 0.85842425, y: 4.9405, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2120179980}
+  m_Father: {fileID: 1549382273}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1353057328
 GameObject:
@@ -24198,9 +24221,14 @@ Transform:
   - {fileID: 1904968061}
   - {fileID: 495886538}
   - {fileID: 119614856}
+  - {fileID: 201475444}
+  - {fileID: 2138023252}
+  - {fileID: 821054586}
   - {fileID: 1268537369}
   - {fileID: 1381397955}
   - {fileID: 863315987}
+  - {fileID: 650956620}
+  - {fileID: 1326940464}
   - {fileID: 436051947}
   - {fileID: 1475052680}
   - {fileID: 911790011}
@@ -25596,8 +25624,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26056ecda5d620246876d11006231e18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::OpenHiddenPlaces
-  HiddenDoor: {fileID: 630672004}
+  HiddenDoor: {fileID: 630672009}
   ItemVisual: {fileID: 1615600512}
+  col: {fileID: 1615600515}
 --- !u!1 &1622798783
 GameObject:
   m_ObjectHideFlags: 0
@@ -34758,11 +34787,6 @@ Transform:
   - {fileID: 1098574077}
   - {fileID: 89489869}
   - {fileID: 1291087163}
-  - {fileID: 201475444}
-  - {fileID: 2138023252}
-  - {fileID: 821054586}
-  - {fileID: 650956620}
-  - {fileID: 1326940464}
   - {fileID: 728532875}
   - {fileID: 261528752}
   - {fileID: 504919665}
@@ -35340,11 +35364,11 @@ Transform:
   m_GameObject: {fileID: 2138023248}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 33.70009, y: 1.04754, z: 38.414146}
+  m_LocalPosition: {x: 36.6, y: 2.55, z: 39.509995}
   m_LocalScale: {x: 0.85842425, y: 4.9405, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2120179980}
+  m_Father: {fileID: 1549382273}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2142065982
 GameObject:
@@ -35514,6 +35538,10 @@ PrefabInstance:
       propertyPath: cameraMovement
       value: 
       objectReference: {fileID: 508027434}
+    - target: {fileID: 5170591610366291233, guid: 13d119c94c9632d44aafcc315e5947e0, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5175738579694529420, guid: 13d119c94c9632d44aafcc315e5947e0, type: 3}
       propertyPath: m_Name
       value: Player2Object
@@ -35612,6 +35640,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1370529921355127099, guid: b215373d60b60a9479d029c8738546c0, type: 3}
+      propertyPath: m_Size.y
+      value: 0.91906637
+      objectReference: {fileID: 0}
+    - target: {fileID: 1370529921355127099, guid: b215373d60b60a9479d029c8738546c0, type: 3}
+      propertyPath: m_Center.y
+      value: 0.04046754
+      objectReference: {fileID: 0}
     - target: {fileID: 2812824325096739533, guid: b215373d60b60a9479d029c8738546c0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.5
