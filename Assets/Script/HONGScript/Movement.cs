@@ -171,11 +171,18 @@ public class Movement : MonoBehaviourPun
     [PunRPC]
     public void RPC_TeleportMe(Vector3 targetPos, Quaternion targetRot)
     {
+        // 传送前通知 DeadCollied 忽略碰撞
+        DeadCollied dead = GetComponent<DeadCollied>();
+        if (dead != null) dead.SetTeleporting(true);
+
+        Collider col = GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
         rb.position = targetPos;
         transform.position = targetPos;
         transform.rotation = targetRot;
 
-        Debug.Log($"[Teleport] IsMine={photonView.IsMine}, Owner={photonView.Owner?.NickName}");
+        StartCoroutine(ReEnableCollider(col, dead));
 
         if (photonView.IsMine)
         {
@@ -187,5 +194,13 @@ public class Movement : MonoBehaviourPun
                 cameraMovement = cam;
             }
         }
+    }
+
+    IEnumerator ReEnableCollider(Collider col, DeadCollied dead)
+    {
+        yield return new WaitForFixedUpdate();
+        yield return new WaitForFixedUpdate();
+        if (col != null) col.enabled = true;
+        if (dead != null) dead.SetTeleporting(false);
     }
 }

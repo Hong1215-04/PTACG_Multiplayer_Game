@@ -12,6 +12,7 @@ public class DeadCollied : MonoBehaviour, IOnEventCallback
     private string playerRole;
 
     private bool isDeadOrWin = false;
+    private bool isTeleporting = false;
 
     private const byte DIE_EVENT = 10;
     private const byte WIN_EVENT = 11;
@@ -58,9 +59,16 @@ public class DeadCollied : MonoBehaviour, IOnEventCallback
         CheckCollision(other.gameObject.layer);
     }
 
+    public void SetTeleporting(bool value)
+    {
+        isTeleporting = value;
+    }
+
     void CheckCollision(int layer)
     {
         if (isDeadOrWin)
+            return;
+        if (isTeleporting) 
             return;
 
         // Everyone dies
