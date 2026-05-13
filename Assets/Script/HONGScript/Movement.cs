@@ -171,9 +171,14 @@ public class Movement : MonoBehaviourPun
     [PunRPC]
     public void RPC_TeleportMe(Vector3 targetPos, Quaternion targetRot)
     {
+        alive = true;
         // 传送前通知 DeadCollied 忽略碰撞
         DeadCollied dead = GetComponent<DeadCollied>();
-        if (dead != null) dead.SetTeleporting(true);
+        if (dead != null) 
+        {
+            dead.SetTeleporting(true);
+            dead.ResetState();
+        }
 
         Collider col = GetComponent<Collider>();
         if (col != null) col.enabled = false;

@@ -112,6 +112,7 @@ public class DeadCollied : MonoBehaviour, IOnEventCallback
     {
         if (isDeadOrWin)
             return;
+        isDeadOrWin = true;
 
         RaiseEventOptions options = new RaiseEventOptions
         {
@@ -130,6 +131,7 @@ public class DeadCollied : MonoBehaviour, IOnEventCallback
     {
         if (isDeadOrWin)
             return;
+        isDeadOrWin = true;
 
         RaiseEventOptions options = new RaiseEventOptions
         {
@@ -192,5 +194,10 @@ public class DeadCollied : MonoBehaviour, IOnEventCallback
     void ShowWinUI()
     {
         GameOverVoteManager.Instance.ShowLevelCompleteVote();
+    }
+    
+    public void ResetState()
+    {
+        isDeadOrWin = false;
     }
 }
