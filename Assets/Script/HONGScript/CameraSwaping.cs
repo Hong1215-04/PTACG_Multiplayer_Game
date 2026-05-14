@@ -49,7 +49,7 @@ public class CameraSwaping : MonoBehaviour
 
                 //if (othercamera == null) return;
 
-                CamMove = this.GetComponentInParent<CamaraMovement>();
+                CamMove = this.GetComponent<CamaraMovement>();
                 Camera2Move = Camera2.GetComponent<CamaraMovement>();
 
                 Vector3 thisCameraPos = CamMove.CameraPosition.position;
