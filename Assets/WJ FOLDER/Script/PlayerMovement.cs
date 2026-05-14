@@ -1,0 +1,45 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public float playerSpeed = 2;
+    public float horizontalSpeed = 3;
+    public float rightLimit = 4f;
+    public float leftLimit = -4f;
+    bool alive = true;
+
+    void Update()
+    {
+
+        if (!alive) return;
+
+        transform.Translate(Vector3.forward * Time.deltaTime * playerSpeed, Space.World);
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow))
+        {
+            if (this.gameObject.transform.position.x > leftLimit)
+            {
+                transform.Translate(Vector3.left * Time.deltaTime * horizontalSpeed);
+            }
+        }
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        {
+            if (this.gameObject.transform.position.x < rightLimit)
+            {
+                transform.Translate(Vector3.left * Time.deltaTime * horizontalSpeed * -1);
+            }
+        }
+    }
+
+    public void Die()
+    {
+        alive = false;
+    }
+
+    void Start()
+    {
+        alive = true;
+
+    }
+}

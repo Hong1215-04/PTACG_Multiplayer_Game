@@ -1,7 +1,8 @@
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
+using Photon.Pun;
+using ExitGames.Client.Photon;
 
-public class CamaraMovement : MonoBehaviour
+public class CamaraMovement : MonoBehaviour, IPunObservable
 {
     [SerializeField] Transform player;
     public Transform CameraPosition;
@@ -27,11 +28,12 @@ public class CamaraMovement : MonoBehaviour
 
     private float HeightOffSet;
     private float ForwardOffSet;
+    private bool paused;
+    private PhotonView photonView;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //Vector3 CameraBasedRotation = new Vector3 (transform.rotation.x, transform.rotation.y, transform.rotation.z);
         Vector3 CameraBasedRotation = CameraPosition.transform.eulerAngles;
         originalX = CameraBasedRotation.x;
         originalZ = CameraBasedRotation.z;
@@ -44,12 +46,24 @@ public class CamaraMovement : MonoBehaviour
         Right = false;
         Front = true;
         Back = false;
-
+        
+        photonView = GetComponent<PhotonView>();
+        
+        // Register this script as observable for network synchronization
+        if (photonView != null && !photonView.ObservedComponents.Contains(this))
+        {
+            photonView.ObservedComponents.Add(this);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (paused)
+        {
+            return;
+        }
+
         if (Front)
         {
             transform.eulerAngles = new Vector3(originalX, FrontRotation, originalZ);
@@ -87,6 +101,9 @@ public class CamaraMovement : MonoBehaviour
 
     public void RotatingLeft()
     {
+        // Only the owner can rotate the camera
+        if (photonView != null && !photonView.IsMine) return;
+        
         if (Front)
         {
             Left = true;
@@ -115,8 +132,8 @@ public class CamaraMovement : MonoBehaviour
 
     public void RotatingRight()
     {
-        //Quaternion RotateRight = Quaternion.Euler(0, 90, 0);
-        //transform.rotation = transform.rotation * RotateRight;
+        // Only the owner can rotate the camera
+        if (photonView != null && !photonView.IsMine) return;
         
         if (Front)
         {
@@ -147,5 +164,66 @@ public class CamaraMovement : MonoBehaviour
     void RecordCamPosition()
     {
         CameraPosition.position = player.position;
+    }
+
+    public void PauseCamera()
+    {
+        paused = true;
+    }
+
+    public void ResumeCamera()
+    {
+        paused = false;
+    }
+
+    public static void PauseAllCameras()
+    {
+        CamaraMovement[] cameras = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
+        foreach (CamaraMovement camera in cameras)
+        {
+            camera.PauseCamera();
+        }
+    }
+
+    public static void ResumeAllCameras()
+    {
+        CamaraMovement[] cameras = FindObjectsByType<CamaraMovement>(FindObjectsSortMode.None);
+        foreach (CamaraMovement camera in cameras)
+        {
+            camera.ResumeCamera();
+        }
+    }
+
+    // Network synchronization - sync camera direction state across network
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // Send camera direction state to others
+            stream.SendNext(Front);
+            stream.SendNext(Back);
+            stream.SendNext(Left);
+            stream.SendNext(Right);
+            stream.SendNext(paused);
+        }
+        else
+        {
+            // Receive remote player's camera state
+            bool remoteFront = (bool)stream.ReceiveNext();
+            bool remoteBack = (bool)stream.ReceiveNext();
+            bool remoteLeft = (bool)stream.ReceiveNext();
+            bool remoteRight = (bool)stream.ReceiveNext();
+            bool remotePaused = (bool)stream.ReceiveNext();
+            
+            // Apply remote camera state
+            if (!photonView.IsMine)
+            {
+                Front = remoteFront;
+                Back = remoteBack;
+                Left = remoteLeft;
+                Right = remoteRight;
+                paused = remotePaused;
+            }
+        }
     }
 }
